@@ -1,0 +1,98 @@
+export const packRu = {
+  'pack.import': 'Импортировать',
+  'pack.title': 'Импорт сборки',
+  'pack.file': 'Выбрать .mrpack или .sporium',
+  'pack.external': 'Из другого лаунчера',
+  'pack.hint':
+    'Выберите пакет или перетащите его в окно Sporium. Импорт создаст новую независимую сборку.',
+  'pack.externalHint':
+    'Выберите папку сборки Prism / MultiMC / ATLauncher либо папку данных Minecraft Launcher / Modrinth App. Перед копированием закройте исходный лаунчер и игру.',
+  'pack.copy':
+    'Будут скопированы игровые файлы и миры. Исходная сборка сохранится. Аккаунты, команды запуска и настройки Java не переносятся.',
+  'pack.reading': 'Читаем сборку…',
+  'pack.name': 'Название новой сборки',
+  'pack.version': 'Версия пакета',
+  'pack.required': 'Обязательных загрузок',
+  'pack.size': 'Загрузка обязательных файлов',
+  'pack.embedded': 'Файлы в пакете',
+  'pack.optional': 'Необязательные файлы',
+  'pack.optionalHint':
+    'Отметьте файлы, которые хотите установить. Они будут загружены дополнительно.',
+  'pack.confirm': 'Создать и импортировать',
+  'pack.prepare':
+    'Точная версия игры и загрузчика сохранится. Minecraft и Java будут подготовлены при первом запуске.',
+  'pack.details': 'Подробности импорта',
+  'pack.skipped': 'Пропущено при переносе',
+  'pack.serverSkip': 'Файлы выделенного сервера и серверные overrides не устанавливаются в клиент.',
+  'pack.settingsSkip':
+    'Аккаунты, Java, команды запуска и настройки исходного лаунчера не переносятся.',
+  'pack.allowed':
+    'Поддерживаются Vanilla, Fabric, Forge и NeoForge. Quilt, нестандартные загрузчики и патчи пока не поддерживаются. Ссылки загрузки пакета должны вести на CDN Modrinth.',
+  'pack.formats': 'Добавить Sporium в «Открыть с помощью»',
+  'pack.formatsDone': 'Sporium добавлен в «Открыть с помощью» для .sporium и .mrpack.',
+  'pack.phase.downloading': 'Импорт: загружаем файлы',
+  'pack.phase.applying': 'Импорт: проверяем и сохраняем сборку',
+  'pack.phase.completed': 'Сборка импортирована',
+  'pack.phase.failed': 'Импорт не завершён',
+  'pack.phase.cancelled': 'Импорт отменён',
+  'pack.open': 'Открыть сборку',
+  'pack.export': 'Экспортировать',
+  'pack.exportTitle': 'Экспорт сборки .sporium',
+  'pack.exportHint':
+    'Файлы Modrinth сохраняются ссылками, настройки — внутри пакета. Minecraft, Java, аккаунты и служебные файлы не включаются.',
+  'pack.worlds': 'Включить миры',
+  'pack.local': 'Включить локальные моды и пакеты, которые я вправе распространять',
+  'pack.save': 'Сохранить .sporium',
+  'pack.saved': 'Пакет сохранён',
+  'pack.refs': 'Файлов по ссылкам',
+  'pack.archiveFiles': 'Файлов в архиве',
+  'pack.pickNew': 'Для экспорта выберите новое имя файла: существующий пакет не перезаписывается.',
+};
+export const packEn: Record<keyof typeof packRu, string> = {
+  'pack.import': 'Import',
+  'pack.title': 'Import instance',
+  'pack.file': 'Choose .mrpack or .sporium',
+  'pack.external': 'From another launcher',
+  'pack.hint': 'Choose a pack or drop it into Sporium. Import creates a new independent instance.',
+  'pack.externalHint':
+    'Choose a Prism / MultiMC / ATLauncher instance directory, or the Minecraft Launcher / Modrinth App data directory. Close the source launcher and game before copying.',
+  'pack.copy':
+    'Game files and worlds will be copied. The source instance is preserved. Accounts, launch commands and Java settings are not transferred.',
+  'pack.reading': 'Reading instance…',
+  'pack.name': 'New instance name',
+  'pack.version': 'Pack version',
+  'pack.required': 'Required downloads',
+  'pack.size': 'Required download size',
+  'pack.embedded': 'Embedded files',
+  'pack.optional': 'Optional files',
+  'pack.optionalHint': 'Choose optional files to install. These add to the download size.',
+  'pack.confirm': 'Create and import',
+  'pack.prepare':
+    'The exact game and loader version is retained. Minecraft and Java will be prepared on first launch.',
+  'pack.details': 'Import details',
+  'pack.skipped': 'Skipped during transfer',
+  'pack.serverSkip': 'Dedicated server files and server overrides are not installed on the client.',
+  'pack.settingsSkip':
+    'Accounts, Java, launch hooks and source launcher settings are not transferred.',
+  'pack.allowed':
+    'Vanilla, Fabric, Forge and NeoForge are supported. Quilt, custom loaders and patches are not supported yet. Pack downloads must use the Modrinth CDN.',
+  'pack.formats': 'Add Sporium to “Open with”',
+  'pack.formatsDone': 'Sporium is available in “Open with” for .sporium and .mrpack.',
+  'pack.phase.downloading': 'Import: downloading files',
+  'pack.phase.applying': 'Import: verifying and saving instance',
+  'pack.phase.completed': 'Instance imported',
+  'pack.phase.failed': 'Import failed',
+  'pack.phase.cancelled': 'Import cancelled',
+  'pack.open': 'Open instance',
+  'pack.export': 'Export',
+  'pack.exportTitle': 'Export .sporium instance',
+  'pack.exportHint':
+    'Modrinth files are referenced, settings are embedded. Minecraft, Java, accounts and internal files are excluded.',
+  'pack.worlds': 'Include worlds',
+  'pack.local': 'Include local mods and packs I have permission to redistribute',
+  'pack.save': 'Save .sporium',
+  'pack.saved': 'Pack saved',
+  'pack.refs': 'Referenced files',
+  'pack.archiveFiles': 'Archived files',
+  'pack.pickNew': 'Choose a new filename: existing packs are not overwritten.',
+};

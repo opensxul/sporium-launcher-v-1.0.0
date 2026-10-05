@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-content-update-plan"
+description = "Enables the content_update_plan command without any pre-configured scope."
+commands.allow = ["content_update_plan"]
+
+[[permission]]
+identifier = "deny-content-update-plan"
+description = "Denies the content_update_plan command without any pre-configured scope."
+commands.deny = ["content_update_plan"]

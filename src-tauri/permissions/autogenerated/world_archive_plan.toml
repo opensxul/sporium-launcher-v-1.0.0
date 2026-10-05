@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-world-archive-plan"
+description = "Enables the world_archive_plan command without any pre-configured scope."
+commands.allow = ["world_archive_plan"]
+
+[[permission]]
+identifier = "deny-world-archive-plan"
+description = "Denies the world_archive_plan command without any pre-configured scope."
+commands.deny = ["world_archive_plan"]

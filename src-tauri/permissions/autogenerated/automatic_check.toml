@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-automatic-check"
+description = "Enables the automatic_check command without any pre-configured scope."
+commands.allow = ["automatic_check"]
+
+[[permission]]
+identifier = "deny-automatic-check"
+description = "Denies the automatic_check command without any pre-configured scope."
+commands.deny = ["automatic_check"]

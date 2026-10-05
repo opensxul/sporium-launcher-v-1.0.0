@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-pick-local-content"
+description = "Enables the pick_local_content command without any pre-configured scope."
+commands.allow = ["pick_local_content"]
+
+[[permission]]
+identifier = "deny-pick-local-content"
+description = "Denies the pick_local_content command without any pre-configured scope."
+commands.deny = ["pick_local_content"]

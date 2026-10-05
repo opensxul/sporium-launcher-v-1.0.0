@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-duplicate-instance"
+description = "Enables the duplicate_instance command without any pre-configured scope."
+commands.allow = ["duplicate_instance"]
+
+[[permission]]
+identifier = "deny-duplicate-instance"
+description = "Denies the duplicate_instance command without any pre-configured scope."
+commands.deny = ["duplicate_instance"]

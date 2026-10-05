@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-automatic-policy"
+description = "Enables the automatic_policy command without any pre-configured scope."
+commands.allow = ["automatic_policy"]
+
+[[permission]]
+identifier = "deny-automatic-policy"
+description = "Denies the automatic_policy command without any pre-configured scope."
+commands.deny = ["automatic_policy"]

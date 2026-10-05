@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-project-replan"
+description = "Enables the project_replan command without any pre-configured scope."
+commands.allow = ["project_replan"]
+
+[[permission]]
+identifier = "deny-project-replan"
+description = "Denies the project_replan command without any pre-configured scope."
+commands.deny = ["project_replan"]

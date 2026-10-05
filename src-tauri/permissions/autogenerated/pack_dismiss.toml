@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-pack-dismiss"
+description = "Enables the pack_dismiss command without any pre-configured scope."
+commands.allow = ["pack_dismiss"]
+
+[[permission]]
+identifier = "deny-pack-dismiss"
+description = "Denies the pack_dismiss command without any pre-configured scope."
+commands.deny = ["pack_dismiss"]

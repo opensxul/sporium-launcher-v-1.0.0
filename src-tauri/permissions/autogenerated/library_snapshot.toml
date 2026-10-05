@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-library-snapshot"
+description = "Enables the library_snapshot command without any pre-configured scope."
+commands.allow = ["library_snapshot"]
+
+[[permission]]
+identifier = "deny-library-snapshot"
+description = "Denies the library_snapshot command without any pre-configured scope."
+commands.deny = ["library_snapshot"]

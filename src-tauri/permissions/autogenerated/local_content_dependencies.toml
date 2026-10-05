@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-local-content-dependencies"
+description = "Enables the local_content_dependencies command without any pre-configured scope."
+commands.allow = ["local_content_dependencies"]
+
+[[permission]]
+identifier = "deny-local-content-dependencies"
+description = "Denies the local_content_dependencies command without any pre-configured scope."
+commands.deny = ["local_content_dependencies"]

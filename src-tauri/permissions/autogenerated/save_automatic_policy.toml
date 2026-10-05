@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-save-automatic-policy"
+description = "Enables the save_automatic_policy command without any pre-configured scope."
+commands.allow = ["save_automatic_policy"]
+
+[[permission]]
+identifier = "deny-save-automatic-policy"
+description = "Denies the save_automatic_policy command without any pre-configured scope."
+commands.deny = ["save_automatic_policy"]

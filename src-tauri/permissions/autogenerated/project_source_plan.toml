@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-project-source-plan"
+description = "Enables the project_source_plan command without any pre-configured scope."
+commands.allow = ["project_source_plan"]
+
+[[permission]]
+identifier = "deny-project-source-plan"
+description = "Denies the project_source_plan command without any pre-configured scope."
+commands.deny = ["project_source_plan"]

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-pack-state"
+description = "Enables the pack_state command without any pre-configured scope."
+commands.allow = ["pack_state"]
+
+[[permission]]
+identifier = "deny-pack-state"
+description = "Denies the pack_state command without any pre-configured scope."
+commands.deny = ["pack_state"]

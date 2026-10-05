@@ -1,0 +1,20 @@
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/
+test-results/
+playwright-report/
+.local/
+/releases/
+*.log
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+
+# Local project history and supplied specifications are not public release source.
+PROJECT_STATE.md
+docs/MASTER_SPEC*.txt
+docs/SPEC_V2_5_REVIEW.md
+docs/SOURCE_RECOVERY.md
+/Войти в GitHub.cmd

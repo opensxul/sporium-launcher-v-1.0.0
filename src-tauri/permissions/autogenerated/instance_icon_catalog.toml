@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-instance-icon-catalog"
+description = "Enables the instance_icon_catalog command without any pre-configured scope."
+commands.allow = ["instance_icon_catalog"]
+
+[[permission]]
+identifier = "deny-instance-icon-catalog"
+description = "Denies the instance_icon_catalog command without any pre-configured scope."
+commands.deny = ["instance_icon_catalog"]

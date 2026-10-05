@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- Provisional development monogram; replace at the final visual asset gate. -->
+  <rect width="256" height="256" rx="60" fill="#132d24"/>
+  <path d="M167 75c-15-11-49-13-63 3-13 15-4 29 21 35l15 4c28 7 41 26 28 49-14 25-55 28-82 11" fill="none" stroke="#b5d5b0" stroke-width="20" stroke-linecap="round"/>
+  <circle cx="192" cy="183" r="11" fill="#d49780"/>
+</svg>

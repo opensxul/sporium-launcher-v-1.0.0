@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-register-pack-formats"
+description = "Enables the register_pack_formats command without any pre-configured scope."
+commands.allow = ["register_pack_formats"]
+
+[[permission]]
+identifier = "deny-register-pack-formats"
+description = "Denies the register_pack_formats command without any pre-configured scope."
+commands.deny = ["register_pack_formats"]

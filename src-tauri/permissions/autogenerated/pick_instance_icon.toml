@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-pick-instance-icon"
+description = "Enables the pick_instance_icon command without any pre-configured scope."
+commands.allow = ["pick_instance_icon"]
+
+[[permission]]
+identifier = "deny-pick-instance-icon"
+description = "Denies the pick_instance_icon command without any pre-configured scope."
+commands.deny = ["pick_instance_icon"]

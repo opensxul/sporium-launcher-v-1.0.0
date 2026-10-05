@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-installed-content"
+description = "Enables the installed_content command without any pre-configured scope."
+commands.allow = ["installed_content"]
+
+[[permission]]
+identifier = "deny-installed-content"
+description = "Denies the installed_content command without any pre-configured scope."
+commands.deny = ["installed_content"]

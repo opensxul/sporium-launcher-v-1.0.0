@@ -1,0 +1,243 @@
+.game-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+.profiles-settings,
+.launch-settings {
+  padding: 24px 26px;
+}
+.launch-settings {
+  margin-top: 20px;
+}
+.profile-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+.profile-card {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--background);
+}
+.profile-card > div:last-child {
+  flex: 1;
+  min-width: 0;
+}
+.profile-card h3 {
+  margin: 0 0 8px;
+}
+.profile-card p,
+.profile-card code,
+.skin-preview small {
+  color: var(--text-muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.profile-card .instance-actions {
+  flex-wrap: wrap;
+}
+.skin-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 150px;
+  min-height: 220px;
+  flex-shrink: 0;
+}
+.skin-preview canvas {
+  width: 96px;
+  height: 192px;
+  image-rendering: pixelated;
+}
+.skin-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+.skin-avatar canvas {
+  image-rendering: pixelated;
+  width: 28px;
+  height: 28px;
+}
+.launch-settings h2 {
+  font-size: 18px;
+  margin-top: 0;
+}
+@media (max-width: 1000px) {
+  .profile-card {
+    flex-wrap: wrap;
+  }
+  .profile-card .instance-actions {
+    gap: 8px;
+  }
+}
+.instance-status-panel {
+  flex-wrap: wrap;
+}
+.instance-status-panel > div:first-child {
+  flex: 1;
+  min-width: 240px;
+}
+.version-picker {
+  display: grid;
+  gap: 10px;
+}
+.text-link {
+  font-size: 12px;
+  color: var(--primary);
+}
+.game-activity {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.game-activity.compact {
+  margin-top: 20px;
+}
+.activity-heading {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.activity-heading > div {
+  flex: 1;
+  min-width: 0;
+}
+.activity-heading strong {
+  overflow-wrap: anywhere;
+}
+.activity-heading p {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 5px 0;
+}
+.game-activity progress {
+  width: 100%;
+  height: 8px;
+  margin: 20px 0 12px;
+  accent-color: var(--primary);
+}
+.game-activity progress::-webkit-progress-bar {
+  background: var(--border);
+  border-radius: 5px;
+}
+.game-activity progress::-webkit-progress-value {
+  background: var(--primary);
+  border-radius: 5px;
+}
+.activity-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 12px;
+}
+.game-alerts {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  margin: 20px 36px 0;
+  border: 1px solid var(--warning);
+  border-radius: 12px;
+}
+.game-alerts > .icon-button {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.game-alerts p {
+  margin: 0;
+}
+.game-exit {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.game-exit code {
+  display: block;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+.runtime-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+.transfer-files {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.transfer-files li {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.transfer-files li span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.transfer-files small {
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+.runtime-list article {
+  display: grid;
+  gap: 8px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+}
+.runtime-list small {
+  color: var(--text-muted);
+}
+.runtime-list code {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.runtime-list button {
+  justify-self: start;
+}
+.java-settings h3 {
+  margin-top: 30px;
+  font-size: 16px;
+}
+.java-settings {
+  padding: 22px 26px;
+}
+.java-settings .form-fields {
+  margin-top: 20px;
+}
+.settings-content > .setting-hint {
+  padding: 18px 26px;
+  margin: 0;
+}
+@media (max-width: 1000px) {
+  .game-buttons {
+    justify-content: flex-start;
+  }
+  .game-alerts {
+    margin: 16px;
+    flex-wrap: wrap;
+  }
+  .activity-heading {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-profile-skin"
+description = "Enables the profile_skin command without any pre-configured scope."
+commands.allow = ["profile_skin"]
+
+[[permission]]
+identifier = "deny-profile-skin"
+description = "Denies the profile_skin command without any pre-configured scope."
+commands.deny = ["profile_skin"]

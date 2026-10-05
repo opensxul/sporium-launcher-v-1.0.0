@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-finish-world-archive"
+description = "Enables the finish_world_archive command without any pre-configured scope."
+commands.allow = ["finish_world_archive"]
+
+[[permission]]
+identifier = "deny-finish-world-archive"
+description = "Denies the finish_world_archive command without any pre-configured scope."
+commands.deny = ["finish_world_archive"]

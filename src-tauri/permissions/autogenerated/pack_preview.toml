@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-pack-preview"
+description = "Enables the pack_preview command without any pre-configured scope."
+commands.allow = ["pack_preview"]
+
+[[permission]]
+identifier = "deny-pack-preview"
+description = "Denies the pack_preview command without any pre-configured scope."
+commands.deny = ["pack_preview"]

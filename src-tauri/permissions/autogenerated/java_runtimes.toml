@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-java-runtimes"
+description = "Enables the java_runtimes command without any pre-configured scope."
+commands.allow = ["java_runtimes"]
+
+[[permission]]
+identifier = "deny-java-runtimes"
+description = "Denies the java_runtimes command without any pre-configured scope."
+commands.deny = ["java_runtimes"]

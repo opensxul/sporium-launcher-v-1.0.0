@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-project-check"
+description = "Enables the project_check command without any pre-configured scope."
+commands.allow = ["project_check"]
+
+[[permission]]
+identifier = "deny-project-check"
+description = "Denies the project_check command without any pre-configured scope."
+commands.deny = ["project_check"]

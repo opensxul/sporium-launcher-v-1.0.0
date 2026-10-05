@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-content-worlds"
+description = "Enables the content_worlds command without any pre-configured scope."
+commands.allow = ["content_worlds"]
+
+[[permission]]
+identifier = "deny-content-worlds"
+description = "Denies the content_worlds command without any pre-configured scope."
+commands.deny = ["content_worlds"]

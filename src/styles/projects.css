@@ -1,0 +1,100 @@
+﻿.project-panel,
+.project-automatic {
+  padding: 24px;
+  min-width: 0;
+}
+.project-panel h2,
+.project-automatic h3 {
+  margin-top: 0;
+}
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+.project-files,
+.project-policy-files,
+.project-plan-files {
+  list-style: none;
+  padding: 0;
+  max-height: 320px;
+  overflow: auto;
+}
+.project-files li,
+.project-policy-files li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.project-files li span:first-child,
+.project-policy-files li span {
+  flex: 1;
+  min-width: 180px;
+  overflow-wrap: anywhere;
+}
+.project-policy-files input,
+.project-policy-files select {
+  max-width: 100%;
+}
+.project-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.project-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.project-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 16px 0;
+  line-height: 1.6;
+}
+.project-consent input {
+  flex: none;
+  margin-top: 5px;
+}
+.project-auto {
+  margin-top: 20px;
+}
+.project-plan-files li {
+  overflow-wrap: anywhere;
+  padding: 6px 0;
+}
+.project-automatic select,
+.project-form input,
+.project-policy-files select,
+.project-policy-files input {
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 0;
+}
+.project-automatic .setting-row {
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.project-update {
+  margin: 16px 0;
+}
+@media (max-width: 800px) {
+  .project-form {
+    grid-template-columns: 1fr;
+  }
+  .project-panel,
+  .project-automatic {
+    padding: 18px;
+  }
+  .project-automatic select {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-project-cancel"
+description = "Enables the project_cancel command without any pre-configured scope."
+commands.allow = ["project_cancel"]
+
+[[permission]]
+identifier = "deny-project-cancel"
+description = "Denies the project_cancel command without any pre-configured scope."
+commands.deny = ["project_cancel"]

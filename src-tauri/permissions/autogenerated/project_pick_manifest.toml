@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-project-pick-manifest"
+description = "Enables the project_pick_manifest command without any pre-configured scope."
+commands.allow = ["project_pick_manifest"]
+
+[[permission]]
+identifier = "deny-project-pick-manifest"
+description = "Denies the project_pick_manifest command without any pre-configured scope."
+commands.deny = ["project_pick_manifest"]

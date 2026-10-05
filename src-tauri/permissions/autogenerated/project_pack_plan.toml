@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-project-pack-plan"
+description = "Enables the project_pack_plan command without any pre-configured scope."
+commands.allow = ["project_pack_plan"]
+
+[[permission]]
+identifier = "deny-project-pack-plan"
+description = "Denies the project_pack_plan command without any pre-configured scope."
+commands.deny = ["project_pack_plan"]

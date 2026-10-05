@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-studio-plan"
+description = "Enables the studio_plan command without any pre-configured scope."
+commands.allow = ["studio_plan"]
+
+[[permission]]
+identifier = "deny-studio-plan"
+description = "Denies the studio_plan command without any pre-configured scope."
+commands.deny = ["studio_plan"]

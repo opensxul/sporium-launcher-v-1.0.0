@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-content-cancel"
+description = "Enables the content_cancel command without any pre-configured scope."
+commands.allow = ["content_cancel"]
+
+[[permission]]
+identifier = "deny-content-cancel"
+description = "Denies the content_cancel command without any pre-configured scope."
+commands.deny = ["content_cancel"]

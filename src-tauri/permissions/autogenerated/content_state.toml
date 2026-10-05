@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-content-state"
+description = "Enables the content_state command without any pre-configured scope."
+commands.allow = ["content_state"]
+
+[[permission]]
+identifier = "deny-content-state"
+description = "Denies the content_state command without any pre-configured scope."
+commands.deny = ["content_state"]
