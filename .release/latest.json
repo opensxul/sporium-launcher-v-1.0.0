@@ -1,0 +1,12 @@
+{
+  "version": "1.0.1",
+  "notes": "# Sporium 1.0.1\n\nИсправлен импорт Fresh & Smooth и других Modrinth-сборок с дополнительными настройками Fabric и AutoModpack.\n\n- Поддержаны игровые папки `data` и `automodpack`.\n- Служебные файлы из `.private` пропускаются с уведомлением в предпросмотре импорта.\n- Сохранены проверки путей, хешей, ограничений архивов и изоляция сборок.\n\nУстанавливается поверх 1.0.0 с сохранением библиотеки и настроек.\n\nДоступны одиночная игра и LAN. Realms и серверы с обязательной проверкой Microsoft-аккаунта требуют авторизации.\n",
+  "pub_date": "2026-10-06T10:46:39.479Z",
+  "size": 5954565,
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUanV0ZlBITUpQMU1Eb1dIdEJZR013UFJKUVJSdzYrQ2U0aXdXUHVKeTlwbnV6R1FsZVJFNnN2ekZkaFJPb3R2Mmp4RjBibWZNdlVsWEUvQVlqTjdGYWNFRHJ2cUxKZ3dnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMjgzNTk5CWZpbGU6U3Bvcml1bV8xLjAuMV94NjQtc2V0dXAuZXhlCXZlcnNpb246MS4wLjEKQjFDSEp4NnpqeXRTa21UYnJFRUpaYUxxK1V1WHZSQkh5cjVjYnVnblVwUi91aTZacmszWEVkZnk0V2tlNU9JWDhUSjNpZnBoWlExTDV1aTIyaDA1Q3c9PQo=",
+      "url": "https://github.com/opensxul/sporium-launcher-v-1.0.0/releases/download/v1.0.1/SporiumLauncher.exe"
+    }
+  }
+}
