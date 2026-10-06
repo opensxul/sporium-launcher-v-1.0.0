@@ -22,6 +22,12 @@ pub const MAX_BYTES: u64 = 2_000_000_000;
 pub const MAX_FILE: u64 = 500_000_000;
 pub const MAX_FILES: usize = 10000;
 
+fn private_path(value: &str) -> bool {
+    value
+        .split('/')
+        .any(|part| part.eq_ignore_ascii_case(".private"))
+}
+
 pub fn allowed_path(value: &str) -> Result<(), CoreError> {
     let part = relative(value)?;
     // Path::components normalizes `a/./b` and repeated separators; do not accept aliases.
@@ -31,6 +37,9 @@ pub fn allowed_path(value: &str) -> Result<(), CoreError> {
             .any(|s| s.is_empty() || s == "." || s == "..")
     {
         return Err(CoreError::UnsafePath);
+    }
+    if private_path(value) {
+        return Err(CoreError::ContentUnsupported);
     }
     let top = value.split('/').next().unwrap_or_default().to_lowercase();
     if !matches!(
@@ -45,6 +54,8 @@ pub fn allowed_path(value: &str) -> Result<(), CoreError> {
             | "kubejs"
             | "scripts"
             | "datapacks"
+            | "data"
+            | "automodpack"
             | "options.txt"
             | "optionsof.txt"
             | "optionsshaders.txt"
@@ -261,6 +272,7 @@ pub fn parse(
     metadata(&manifest)?;
     let mut embedded = BTreeMap::new();
     let mut warnings = vec![];
+    let mut skipped_private = 0;
     // Overrides replace declared payloads; client layer replaces shared overrides.
     for layer in ["overrides/", "client-overrides/"] {
         if sporium && layer != "overrides/" {
@@ -270,6 +282,13 @@ pub fn parse(
             let Some(target) = name.strip_prefix(layer) else {
                 continue;
             };
+            // Some public mrpacks contain a mod's private trust/account state alongside
+            // ordinary settings. Keep the pack usable without transferring that state.
+            // Sporium archives still require their exact declared, allowed payload.
+            if !sporium && private_path(target) {
+                skipped_private += 1;
+                continue;
+            }
             allowed_path(target)?;
             let mut entry = zip.by_name(name).map_err(|_| CoreError::Integrity)?;
             let file = paths.checked(&destination.join(relative(target)?))?;
@@ -295,6 +314,9 @@ pub fn parse(
             }
             embedded.insert(target.to_string(), digest(&file)?);
         }
+    }
+    if skipped_private > 0 {
+        warnings.push(format!("private_overrides_skipped:{skipped_private}"));
     }
     if ordinary_files
         .iter()

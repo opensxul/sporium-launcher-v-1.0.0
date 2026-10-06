@@ -1,4 +1,5 @@
 export const packRu = {
+  'pack.privateSkipped': 'Пропущены приватные служебные файлы модов',
   'pack.import': 'Импортировать',
   'pack.title': 'Импорт сборки',
   'pack.file': 'Выбрать .mrpack или .sporium',
@@ -49,6 +50,7 @@ export const packRu = {
   'pack.pickNew': 'Для экспорта выберите новое имя файла: существующий пакет не перезаписывается.',
 };
 export const packEn: Record<keyof typeof packRu, string> = {
+  'pack.privateSkipped': 'Private mod state files skipped',
   'pack.import': 'Import',
   'pack.title': 'Import instance',
   'pack.file': 'Choose .mrpack or .sporium',

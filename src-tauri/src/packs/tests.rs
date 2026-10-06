@@ -65,10 +65,74 @@ fn unsafe_paths_and_secrets_are_rejected() {
         ".sporium/content.json",
         "accounts.json",
         "versions/1.jar",
+        "automodpack/.private/automodpack-known-hosts.json",
+        "data/.PRIVATE/credentials.json",
     ] {
         assert!(archive::allowed_path(name).is_err(), "{name}");
     }
     assert!(archive::allowed_path("config/example.json").is_ok());
+}
+
+#[test]
+fn fabric_data_and_automodpack_settings_import_without_private_state() {
+    let (root, manager) = setup();
+    let pack = root.path().join("fresh-layout.mrpack");
+    zip(
+        &pack,
+        &manifest(),
+        &[
+            (
+                "overrides/data/fabricDefaultResourcePacks.dat",
+                b"fabric-data",
+            ),
+            ("overrides/data/fabric_default_resource_packs.json", b"{}"),
+            (
+                "overrides/automodpack/automodpack-client.json",
+                b"{\"playMusic\":false}",
+            ),
+            ("overrides/automodpack/automodpack-server.json", b"{}"),
+            (
+                "overrides/automodpack/.private/automodpack-known-hosts.json",
+                b"private-fixture",
+            ),
+            (
+                "client-overrides/data/fabric_default_resource_packs.json",
+                b"{\"client\":true}",
+            ),
+        ],
+    );
+    let before = fs::read(&pack).unwrap();
+    let preview = manager.preview(&pack).unwrap();
+    assert!(
+        preview
+            .warnings
+            .iter()
+            .any(|warning| warning == "private_overrides_skipped:1")
+    );
+    manager
+        .start(&preview.token, "Fresh layout", vec![])
+        .unwrap();
+    let job = wait(&manager);
+    assert_eq!(job.phase, "completed", "{:?}", job.error);
+    let game = manager
+        .library
+        .root()
+        .join("instances")
+        .join(job.instance_id.unwrap());
+    assert_eq!(
+        fs::read(game.join("data/fabricDefaultResourcePacks.dat")).unwrap(),
+        b"fabric-data"
+    );
+    assert_eq!(
+        fs::read(game.join("data/fabric_default_resource_packs.json")).unwrap(),
+        b"{\"client\":true}"
+    );
+    assert_eq!(
+        fs::read(game.join("automodpack/automodpack-client.json")).unwrap(),
+        b"{\"playMusic\":false}"
+    );
+    assert!(!game.join("automodpack/.private").exists());
+    assert_eq!(fs::read(&pack).unwrap(), before);
 }
 #[test]
 fn dependency_schema_is_exact_and_unknown_loaders_fail() {

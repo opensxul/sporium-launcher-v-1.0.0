@@ -31,9 +31,13 @@ multiple loader families and Quilt are refused rather than guessed.
   case aliases, links, special entries and file/parent collisions. Archive names
   cannot modify launcher internals, game libraries or authentication stores.
 - Accepted payload roots: mods, mods_disabled, config, defaultconfigs, saves,
-  resourcepacks, shaderpacks, kubejs, scripts, datapacks; selected game option files
+  resourcepacks, shaderpacks, kubejs, scripts, datapacks, data, automodpack; selected game option files
   and servers.dat. Unknown payload roots are unsupported. Extra archive metadata
   outside override layers is reported under Details and ignored.
+- Modrinth override files inside a `.private` directory are skipped with a count
+  in the preview. Private state is never imported as a declared download or included
+  in a Sporium archive. Fabric resource-pack data and ordinary AutoModpack settings
+  are retained (including the client override layer).
 - Limits: 500 MB source ZIP/per file, 2 GB combined declared payload/overrides,
   10,000 archive/source entries, 12 MB manifest. Preview expires after 15 minutes.
 - Freeze source bytes, extract privately, verify before publishing. Cancel/error

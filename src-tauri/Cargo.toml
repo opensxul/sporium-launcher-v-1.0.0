@@ -1,6 +1,6 @@
 [package]
 name = "sporium"
-version = "1.0.0"
+version = "1.0.1"
 description = "Sporium Minecraft launcher and instance library"
 edition = "2024"
 rust-version = "1.98"

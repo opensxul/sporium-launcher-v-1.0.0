@@ -290,7 +290,7 @@ export function PackImports() {
                 </section>
               )}
               <p className="setting-hint">{t('pack.prepare')}</p>
-              {preview.warnings.length > 0 && (
+              {preview.warnings.some((warning) => !warning.startsWith('modrinth_pack_ref:')) && (
                 <details>
                   <summary>{t('pack.details')}</summary>
                   <p>{t('pack.settingsSkip')}</p>
@@ -298,13 +298,17 @@ export function PackImports() {
                     <p>{t('pack.serverSkip')}</p>
                   )}
                   <ul>
-                    {preview.warnings.map((warning) => (
-                      <li key={warning}>
-                        {warning.startsWith('source_item_skipped:')
-                          ? `${t('pack.skipped')}: ${warning.slice(20)}`
-                          : warning}
-                      </li>
-                    ))}
+                    {preview.warnings
+                      .filter((warning) => !warning.startsWith('modrinth_pack_ref:'))
+                      .map((warning) => (
+                        <li key={warning}>
+                          {warning.startsWith('source_item_skipped:')
+                            ? `${t('pack.skipped')}: ${warning.slice(20)}`
+                            : warning.startsWith('private_overrides_skipped:')
+                              ? `${t('pack.privateSkipped')}: ${warning.split(':')[1]}`
+                              : warning}
+                        </li>
+                      ))}
                   </ul>
                 </details>
               )}
