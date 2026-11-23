@@ -269,6 +269,27 @@ try {
   if (process.env.SPORIUM_SMOKE_GAME === '1') {
     statusServer.listen(port, '127.0.0.1');
     await once(statusServer, 'listening');
+    // First-run Minecraft intentionally pauses Quick Play at its accessibility
+    // screen. Complete that initial choice in this disposable library.
+    const { affectedId } = await invoke('create_instance', {
+      request: {
+        name: 'Sporium Survival',
+        minecraftVersion: version,
+        loader: 'vanilla',
+        collectionId: null,
+      },
+    });
+    await writeFile(
+      path.join(library, 'instances', affectedId, 'options.txt'),
+      'onboardAccessibility:false\n',
+    );
+    await page.locator('aside nav a[href="#/"]').click();
+    await expect(page).toHaveURL(/#\/$/);
+    await page.reload();
+    await expect(page.locator('.launch-target a')).toHaveAttribute(
+      'href',
+      '#/instance/' + affectedId,
+    );
     await page.locator('.play-button').click();
     let running, job;
     for (let i = 0; i < 540; i++) {
@@ -314,7 +335,7 @@ try {
     }
     await invoke('stop_game', { id: running.instanceId });
     report.checks.push(
-      'home creates a Vanilla instance and launches real Minecraft, audio and renderer start, 1024 MiB applied, owned game stops',
+      'home installs a Vanilla instance and launches real Minecraft, audio and renderer start, 1024 MiB applied, owned game stops',
     );
   }
   assert.deepEqual(errors, []);
