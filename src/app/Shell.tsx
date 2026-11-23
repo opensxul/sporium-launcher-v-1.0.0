@@ -60,7 +60,7 @@ export function Shell() {
         {t('app.skip')}
       </a>
       <aside className="sidebar">
-        <NavLink to="/" className="brand" aria-label="Sporych Launcher">
+        <NavLink to="/" className="brand" aria-label="Sporium Launcher">
           <img
             className="sidebar-mark"
             src="/branding/scenery/fly-agaric.webp"
@@ -69,7 +69,7 @@ export function Shell() {
             alt=""
           />
           <span className="brand-word">
-            SPORYCH<span className="brand-sub">{t('app.brandCaption')}</span>
+            SPORIUM<span className="brand-sub">{t('app.brandCaption')}</span>
           </span>
         </NavLink>
 
@@ -113,7 +113,7 @@ export function Shell() {
       <div className="main-shell">
         <header className="topbar">
           <div className="breadcrumb">
-            <span>Sporych</span>
+            <span>Sporium</span>
             <PixelIcon name="arrow" />
             <span>{t(current)}</span>
           </div>

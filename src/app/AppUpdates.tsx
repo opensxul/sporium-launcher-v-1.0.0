@@ -53,11 +53,11 @@ export function AppUpdates() {
   if (!update) return null;
   return (
     <Modal
-      title={ru ? 'Доступно обновление Sporych' : 'Sporych update available'}
+      title={ru ? 'Доступно обновление Sporium' : 'Sporium update available'}
       busy={busy}
       onClose={() => setUpdate(null)}
     >
-      <h3>Sporych Launcher {update.version}</h3>
+      <h3>Sporium Launcher {update.version}</h3>
       {update.size && <p>{(update.size / 1048576).toFixed(1)} MB</p>}
       <p className="update-notes">{update.notes}</p>
       <p className="setting-hint">

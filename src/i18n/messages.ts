@@ -15,8 +15,8 @@ export const ru = {
   'app.subtitle': 'Лаунчер и библиотека сборок Minecraft',
   'app.brandCaption': 'ЛАУНЧЕР',
   'app.early': 'Ранняя версия',
-  'app.preview': 'Веб-предпросмотр. Настройки сохраняются в приложении Sporych.',
-  'app.loading': 'Открываем Sporych…',
+  'app.preview': 'Веб-предпросмотр. Настройки сохраняются в приложении Sporium.',
+  'app.loading': 'Открываем Sporium…',
   'app.skip': 'Перейти к содержимому',
   'app.nav': 'Основная навигация',
   'app.library': 'Твоя библиотека',
@@ -132,7 +132,7 @@ export const ru = {
   'settings.futureTitle': 'Всё будет на своём месте',
   'settings.futureBody':
     'Этот раздел станет доступен вместе с соответствующими возможностями лаунчера.',
-  'error.title': 'Не удалось открыть Sporych',
+  'error.title': 'Не удалось открыть Sporium',
   'error.retry': 'Попробовать снова',
   'error.STORAGE_UNAVAILABLE':
     'Не удалось прочитать или сохранить данные. Проверь доступ к папке Sporium и свободное место на диске.',
@@ -163,8 +163,8 @@ export const en: Record<MessageKey, string> = {
   'app.subtitle': 'Minecraft launcher & instance library',
   'app.brandCaption': 'LAUNCHER',
   'app.early': 'Early version',
-  'app.preview': 'Web preview. Settings are saved in the Sporych desktop app.',
-  'app.loading': 'Opening Sporych…',
+  'app.preview': 'Web preview. Settings are saved in the Sporium desktop app.',
+  'app.loading': 'Opening Sporium…',
   'app.skip': 'Skip to content',
   'app.nav': 'Main navigation',
   'app.library': 'Your library',
@@ -279,7 +279,7 @@ export const en: Record<MessageKey, string> = {
   'settings.futureTitle': 'A place for everything',
   'settings.futureBody':
     'This section will become available with the corresponding launcher features.',
-  'error.title': 'Could not open Sporych',
+  'error.title': 'Could not open Sporium',
   'error.retry': 'Try again',
   'error.STORAGE_UNAVAILABLE':
     'Could not read or save data. Check access to the Sporium folder and available disk space.',

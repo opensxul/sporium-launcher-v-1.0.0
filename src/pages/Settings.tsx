@@ -251,7 +251,7 @@ export function SettingsPage() {
           {currentSection === 'about' && (
             <div className="settings-detail">
               <BrandMark />
-              <h3>Sporych Launcher</h3>
+              <h3>Sporium Launcher</h3>
               <p>{t('settings.aboutBody')}</p>
               <div className="version-line">
                 <Info size={16} />

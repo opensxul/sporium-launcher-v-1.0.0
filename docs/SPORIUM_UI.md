@@ -1,4 +1,4 @@
-# Аудит интерфейса Sporych
+# Аудит интерфейса Sporium
 
 База аудита — Sporium 2.0.0, ветка feature/sporium-launcher-2. Интерфейс использует React, TypeScript, HashRouter и CSS. Tauri связывает экранные действия с Rust через `src/services/backend.ts` и команды, зарегистрированные в `src-tauri/src/lib.rs`. Библиотека, профили и параметры хранятся в существующем каталоге приложения. Обновлятор старых клиентов ждёт подписанный `latest.json` и NSIS-установщик из GitHub Releases.
 
@@ -25,11 +25,11 @@
 Файлы в `public/branding/scenery/` созданы в ImageGen по мотивам референса. Баннер и фоны карточек иллюстрируют вымышленные миры. Иконки сборок приходят из Modrinth, а галерея сервера получает скриншоты из настроенного источника.
 
 <details>
-<summary>Промпты для иллюстраций</summary>
+<summary>Описания для генерации иллюстраций</summary>
 
 **castle-sunset.webp**
 
-> Create a single finished game-world landscape as a background asset for Sporych Launcher, panoramic ultra-wide framing about 3.6:1. Minecraft-inspired in-game screenshot style, convincing large block geometry and crisp pixel textures, handsome stone medieval castle with square crenellated towers on a green hill at the FAR RIGHT, a winding river valley with low hills, blocky forests and a lantern by the path. Big golden square sun at the horizon on the right side, peach and purple stepped clouds, saturated sunset highlights. Right half bright and scenic. Left forty percent consists of a shaded forest with subdued leaves and dark soil so legible launcher HTML headings can be placed over it. Arrange the horizon in the middle, all key features in the middle horizontal band for a responsive cover crop. Warm and adventurous, slightly nostalgic Minecraft shader screenshot with handcrafted pixel art texture, no interface, no captions, no text, no logo, no overlays, no watermark. The castle and sunset are entirely original art.
+> Create a single finished game-world landscape as a background asset for the launcher, panoramic ultra-wide framing about 3.6:1. Minecraft-inspired in-game screenshot style, convincing large block geometry and crisp pixel textures, handsome stone medieval castle with square crenellated towers on a green hill at the FAR RIGHT, a winding river valley with low hills, blocky forests and a lantern by the path. Big golden square sun at the horizon on the right side, peach and purple stepped clouds, saturated sunset highlights. Right half bright and scenic. Left forty percent consists of a shaded forest with subdued leaves and dark soil so legible launcher HTML headings can be placed over it. Arrange the horizon in the middle, all key features in the middle horizontal band for a responsive cover crop. Warm and adventurous, slightly nostalgic Minecraft shader screenshot with handcrafted pixel art texture, no interface, no captions, no text, no logo, no overlays, no watermark. The castle and sunset are entirely original art.
 
 **moss-stone.webp**
 

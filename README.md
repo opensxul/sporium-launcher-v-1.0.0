@@ -1,4 +1,4 @@
-# Sporych Launcher
+# Sporium Launcher
 
 <img src="public/branding/mark-256.png" width="128" alt="Sporium" />
 
