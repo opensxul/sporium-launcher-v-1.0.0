@@ -16,13 +16,27 @@ export function AppUpdates() {
   useEffect(() => {
     if (!desktop) return;
     let active = true;
-    const timer = setTimeout(() => {
+    const check = (manual = false) => {
       void invoke<AppUpdate | null>('app_update_check')
         .then((value) => {
-          if (active) setUpdate(value);
+          if (active) {
+            setUpdate(value);
+            if (manual)
+              window.dispatchEvent(
+                new CustomEvent('sporium-update-result', {
+                  detail: value ? 'available' : 'current',
+                }),
+              );
+          }
         })
-        .catch(() => {});
-    }, 1500);
+        .catch(() => {
+          if (active && manual)
+            window.dispatchEvent(new CustomEvent('sporium-update-result', { detail: 'error' }));
+        });
+    };
+    const manual = () => check(true);
+    window.addEventListener('sporium-check-update', manual);
+    const timer = data.settings.values.world.autoUpdates ? setTimeout(check, 1500) : undefined;
     const listener = listen<{ received: number; total: number | null }>(
       'app-update-progress',
       (event) => {
@@ -31,10 +45,11 @@ export function AppUpdates() {
     );
     return () => {
       active = false;
+      window.removeEventListener('sporium-check-update', manual);
       clearTimeout(timer);
       void listener.then((unlisten) => unlisten()).catch(() => {});
     };
-  }, [desktop]);
+  }, [desktop, data.settings.values.world.autoUpdates]);
   if (!update) return null;
   return (
     <Modal

@@ -57,7 +57,7 @@ export function GameActivity({ compact = false }: { compact?: boolean }) {
             disabled={starting}
             onClick={() => void start({ id: job.instanceId, action: job.action })}
           >
-            {t(job.action === 'local' ? 'download.retryLaunch' : 'download.retry')}
+            {t(job.action !== 'install' ? 'download.retryLaunch' : 'download.retry')}
           </button>
         )}
       </div>
@@ -73,6 +73,18 @@ export function GameActivity({ compact = false }: { compact?: boolean }) {
         />
       )}
       <div className="activity-numbers">
+        {job.phase === 'downloading' && job.totalBytes > 0 && (
+          <strong>
+            {Math.min(
+              100,
+              Math.floor(
+                ((job.verifiedBytes + job.activeFiles.reduce((n, f) => n + f.received, 0)) * 100) /
+                  job.totalBytes,
+              ),
+            )}
+            %
+          </strong>
+        )}
         {job.totalFiles > 0 && (
           <span>
             {t('game.files')}: {job.completedFiles} / {job.totalFiles}

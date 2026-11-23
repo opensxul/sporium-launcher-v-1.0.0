@@ -36,6 +36,7 @@ struct Tracked {
     child: Child,
     view: GameSession,
     _group: job_object::ProcessGroup,
+    _temporary_natives: Option<tempfile::TempDir>,
     _lease: File,
 }
 #[derive(Default)]
@@ -197,7 +198,7 @@ impl GameManager {
             if worker.cancelled() {
                 return Err(CoreError::Cancelled);
             }
-            install::prepare(&worker, instance, directory, &nickname)?;
+            install::prepare(&worker, instance, directory, &nickname, None)?;
             if worker.cancelled() {
                 return Err(CoreError::Cancelled);
             }
@@ -234,14 +235,14 @@ impl GameManager {
             return Err(CoreError::InstanceBusy);
         }
         let (instance, directory, lease) = self.library.lease_game(&request.id)?;
-        if matches!(request.action, GameAction::Local) {
+        if !matches!(request.action, GameAction::Install) {
             crate::projects::validate_launch(
                 &Paths::new(self.library.root())?,
                 &directory,
                 &instance,
             )?;
         }
-        let nickname = crate::profiles::active(&self.database)?.nickname;
+        let profile = crate::profiles::active(&self.database)?;
         self.record_operation(Some(&request))?;
         state.job = Some(GameJob::new(&request, JobPhase::Resolving));
         state.rate_sample = None;
@@ -253,7 +254,29 @@ impl GameManager {
             .name("sporium-game-operation".into())
             .spawn(move || {
                 let result = (|| {
-                    let plan = install::prepare(&manager, &instance, &directory, &nickname)?;
+                    let world = manager.database.load_settings()?.values.world;
+                    let join = matches!(request.action, GameAction::World) && world.auto_join;
+                    if join
+                        && (world.address.is_empty()
+                            || instance.loader != crate::instances::model::Loader::Vanilla)
+                    {
+                        return Err(CoreError::InvalidSettings);
+                    }
+                    let mut plan = install::prepare(
+                        &manager,
+                        &instance,
+                        &directory,
+                        &profile.nickname,
+                        (profile.microsoft && !matches!(request.action, GameAction::Install))
+                            .then_some(profile.id.as_str()),
+                    )?;
+                    if join {
+                        launch::connect_to_server(
+                            &mut plan.game_args,
+                            &world.address,
+                            &instance.minecraft_version,
+                        )?;
+                    }
                     let limit = manager.database.load_settings()?.values.cache_limit_mb;
                     if limit > 0
                         && cache::trim(manager.library.root(), u64::from(limit) * 1048576).is_err()
@@ -287,6 +310,7 @@ impl GameManager {
                             child,
                             view,
                             _group: group,
+                            _temporary_natives: plan.temporary_natives,
                             _lease: lease,
                         });
                     }

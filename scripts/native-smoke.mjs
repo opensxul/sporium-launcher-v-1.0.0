@@ -117,6 +117,8 @@ try {
     });
     assert.equal(rejected, 'NOT_FOUND');
   }
+  await page.locator('.forest-hero').waitFor();
+  await page.locator('a[href="#/library"]').first().click();
   await page.getByRole('heading', { name: 'Мои сборки', exact: true }).waitFor();
   await page.screenshot({
     path: path.join(artifactDirectory, 'home-native.png'),

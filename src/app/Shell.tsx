@@ -5,11 +5,15 @@ import {
   Download,
   Folder,
   Home,
-  Leaf,
+  Newspaper,
+  Trees,
+  UserRound,
+  Layers,
   Settings,
 } from 'lucide-react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { BrandMark } from '../components/BrandMark';
+import { WorldProvider } from '../world/WorldProvider';
 import { AppUpdates } from './AppUpdates';
 import { BackupNotice } from '../library/LibraryStatus';
 import { GameAlerts } from '../game/GameActivity';
@@ -23,6 +27,10 @@ import '../styles/packs.css';
 
 const navigation = [
   { to: '/', key: 'nav.home', icon: Home },
+  { to: '/news', key: 'nav.news', icon: Newspaper },
+  { to: '/world', key: 'nav.world', icon: Trees },
+  { to: '/profile', key: 'nav.profile', icon: UserRound },
+  { to: '/library', key: 'nav.library', icon: Layers },
   { to: '/catalog', key: 'nav.catalog', icon: Compass },
   { to: '/instances', key: 'nav.instances', icon: BookOpen },
   { to: '/folders', key: 'nav.folders', icon: Folder },
@@ -62,7 +70,7 @@ export function Shell() {
             sporium<span className="brand-sub">{t('app.brandCaption')}</span>
           </span>
         </NavLink>
-        <div className="nav-caption">{t('app.library')}</div>
+
         <nav aria-label={t('app.nav')}>
           {navigation.map(({ to, key, icon: Icon }) => (
             <NavLink
@@ -80,15 +88,10 @@ export function Shell() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className="sidebar-decoration" aria-hidden="true">
-            <Leaf size={88} strokeWidth={0.5} />
-            <span />
-          </div>
           <div className="build-label">
             <span className="status-dot" />
             <span>Sporium {data.info.version}</span>
           </div>
-          <span className="early-label">{t('app.early')}</span>
         </div>
       </aside>
       <div className="main-shell">
@@ -98,7 +101,7 @@ export function Shell() {
             <ChevronRight size={13} />
             <span>{t(current)}</span>
           </div>
-          <NavLink to="/settings/accounts" className="account-widget" title={t('account.guest')}>
+          <NavLink to="/profile" className="account-widget" title={t('nav.profile')}>
             <span className="avatar">
               <Skin key={nickname} nickname={nickname} />
             </span>
@@ -115,32 +118,40 @@ export function Shell() {
           <BackupNotice />
           <GameAlerts />
           <PackImports />
-          <Outlet />
+          <WorldProvider>
+            <Outlet />
+          </WorldProvider>
         </main>
-        <footer className="download-dock">
-          <div className="dock-icon">
-            <Download size={17} />
-          </div>
-          <div>
-            <span>
-              {contentJob && contentActive(contentJob)
-                ? t(`content.phase.${contentJob.phase}` as MessageKey)
-                : gameState.job && jobActive(gameState)
-                  ? t(gameState.job.paused ? 'download.pausedStatus' : `job.${gameState.job.phase}`)
-                  : t('downloads.queue')}
-            </span>
-            <small>
-              {contentJob && contentActive(contentJob)
-                ? `${contentJob.completedFiles} / ${contentJob.totalFiles}`
-                : gameState.job && jobActive(gameState)
-                  ? `${gameState.job.completedFiles} / ${gameState.job.totalFiles || '…'}`
-                  : t('downloads.footer')}
-            </small>
-          </div>
-          <NavLink to="/downloads" className="icon-button" aria-label={t('nav.downloads')}>
-            <ChevronRight size={19} />
-          </NavLink>
-        </footer>
+        {(pathname !== '/' || contentActive(contentJob) || jobActive(gameState)) && (
+          <footer className="download-dock">
+            <div className="dock-icon">
+              <Download size={17} />
+            </div>
+            <div>
+              <span>
+                {contentJob && contentActive(contentJob)
+                  ? t(`content.phase.${contentJob.phase}` as MessageKey)
+                  : gameState.job && jobActive(gameState)
+                    ? t(
+                        gameState.job.paused
+                          ? 'download.pausedStatus'
+                          : `job.${gameState.job.phase}`,
+                      )
+                    : t('downloads.queue')}
+              </span>
+              <small>
+                {contentJob && contentActive(contentJob)
+                  ? `${contentJob.completedFiles} / ${contentJob.totalFiles}`
+                  : gameState.job && jobActive(gameState)
+                    ? `${gameState.job.completedFiles} / ${gameState.job.totalFiles || '…'}`
+                    : t('downloads.footer')}
+              </small>
+            </div>
+            <NavLink to="/downloads" className="icon-button" aria-label={t('nav.downloads')}>
+              <ChevronRight size={19} />
+            </NavLink>
+          </footer>
+        )}
       </div>
     </div>
   );

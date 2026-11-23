@@ -41,6 +41,12 @@ pub enum CoreError {
     SourceChanged,
     #[error("system file manager could not be opened")]
     OpenFolderFailed,
+    #[error("SIGN_IN")]
+    SignIn,
+    #[error("ENTITLEMENT")]
+    Entitlement,
+    #[error("PROFILE_MISMATCH")]
+    ProfileMismatch,
     #[error("network request failed")]
     Network,
     #[error("download integrity check failed")]
@@ -62,6 +68,9 @@ pub enum CoreError {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, TS)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ErrorCode {
+    ProfileMismatch,
+    Entitlement,
+    SignIn,
     RateLimited,
     ContentIncompatible,
     ContentUnsupported,
@@ -130,6 +139,9 @@ impl From<CoreError> for CommandError {
             CoreError::LibraryBusy => ErrorCode::LibraryBusy,
             CoreError::SourceChanged => ErrorCode::SourceChanged,
             CoreError::OpenFolderFailed => ErrorCode::OpenFolderFailed,
+            CoreError::SignIn => ErrorCode::SignIn,
+            CoreError::Entitlement => ErrorCode::Entitlement,
+            CoreError::ProfileMismatch => ErrorCode::ProfileMismatch,
             CoreError::Network => ErrorCode::Network,
             CoreError::Integrity => ErrorCode::Integrity,
             CoreError::UnsafeArchive => ErrorCode::UnsafeArchive,

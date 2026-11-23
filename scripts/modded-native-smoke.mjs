@@ -57,7 +57,7 @@ try {
     });
   assert.equal(await page.locator('.preview-notice').count(), 0);
   const bootstrap = await invoke('bootstrap');
-  assert.equal(bootstrap.info.databaseSchema, 3);
+  assert.equal(bootstrap.info.databaseSchema, 4);
   const active = bootstrap.profiles.profiles.find(
     (p) => p.id === bootstrap.profiles.activeProfileId,
   );

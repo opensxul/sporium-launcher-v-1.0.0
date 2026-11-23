@@ -1,19 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { WorldSettings, DesktopOptions } from '../world/WorldSettings';
 import { BrandMark } from '../components/BrandMark';
-import {
-  Check,
-  HardDrive,
-  Info,
-  LoaderCircle,
-  Palette,
-  Settings2,
-  ShieldCheck,
-  Sparkles,
-} from 'lucide-react';
+import { Check, HardDrive, Info, LoaderCircle, ShieldCheck, Sparkles } from 'lucide-react';
 import { NavLink, useBeforeUnload, useBlocker, useParams } from 'react-router-dom';
 import { useFoundation } from '../app/context';
 import type { Locale, Settings } from '../bindings/core';
-import { EmptyState, ErrorNotice, PageHeading, Toggle } from '../components/ui';
+import { ErrorNotice, PageHeading, Toggle } from '../components/ui';
 import { normalizeError } from '../services/backend';
 import type { BackendError } from '../services/backend';
 import { NotFoundPage } from './StaticPages';
@@ -126,6 +118,17 @@ export function SettingsPage() {
           <div className="settings-content-header">
             <h2>{t(`settings.${currentSection}`)}</h2>
           </div>
+          {['minecraft', 'animations', 'advanced'].includes(currentSection) && (
+            <WorldSettings
+              section={currentSection}
+              value={draft.world}
+              onChange={(world) => update({ world })}
+              disabled={!desktop || saving}
+            />
+          )}
+          {(currentSection === 'advanced' || currentSection === 'storage') && (
+            <DesktopOptions section={currentSection} />
+          )}
           {currentSection === 'appearance' && (
             <>
               <div className="theme-block">
@@ -153,7 +156,6 @@ export function SettingsPage() {
                   </span>
                 </div>
                 <p className="setting-hint">{t('settings.themeHint')}</p>
-                <p className="setting-hint subdued">{t('settings.themeFuture')}</p>
               </div>
               <label className="setting-row">
                 <span>
@@ -259,23 +261,6 @@ export function SettingsPage() {
               <AutomaticSettings />
             </div>
           )}
-          {![
-            'appearance',
-            'animations',
-            'storage',
-            'downloads',
-            'about',
-            'accounts',
-            'minecraft',
-            'java',
-            'catalog',
-          ].includes(currentSection) && (
-            <EmptyState
-              icon={currentSection === 'advanced' ? Settings2 : Palette}
-              title={t('settings.futureTitle')}
-              body={t('settings.futureBody')}
-            />
-          )}
           {error && (
             <ErrorNotice
               error={error}
@@ -292,9 +277,15 @@ export function SettingsPage() {
               }
             />
           )}
-          {['appearance', 'animations', 'minecraft', 'java', 'downloads', 'storage'].includes(
-            currentSection,
-          ) && (
+          {[
+            'appearance',
+            'animations',
+            'minecraft',
+            'java',
+            'downloads',
+            'storage',
+            'advanced',
+          ].includes(currentSection) && (
             <div className="settings-savebar">
               <span aria-live="polite" className={saved ? 'saved-status' : 'save-status'}>
                 {saved ? (

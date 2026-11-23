@@ -1,6 +1,6 @@
 use super::{
     GameManager, catalog,
-    fs::{extract, read_limited, write_atomic},
+    fs::{extract_to, java_path, read_limited, write_atomic},
     java,
     launch::{self, LaunchInputs, ResolvedLaunchPlan},
     metadata,
@@ -27,6 +27,7 @@ pub fn prepare(
     instance: &Instance,
     directory: &Path,
     nickname: &str,
+    account: Option<&str>,
 ) -> Result<ResolvedLaunchPlan, CoreError> {
     let paths = Paths::new(manager.library.root())?;
     let _download_lock = paths.named_lock(&paths.root().join("shared/cache/downloads.lock"))?;
@@ -78,30 +79,12 @@ pub fn prepare(
     libraries.downloads.extend(assets.downloads);
     download_all(manager, &paths, &network, &libraries.downloads)?;
     manager.phase(JobPhase::Extracting);
-    let staging = paths
-        .root()
-        .join("launcher/staging")
-        .join(format!("natives-{}", uuid::Uuid::new_v4()));
-    let natives = directory.join(".sporium/natives").join(&entry.sha1);
-    // Re-extract into a fresh directory on every repair/launch; never trust stale DLLs.
-    let extraction = (|| {
-        paths.mkdir(&staging)?;
-        for (source, excludes) in &libraries.natives {
-            extract(&paths, source, &staging, excludes, &cancelled)?;
-        }
-        if cancelled() {
-            return Err(CoreError::Cancelled);
-        }
-        paths.mkdir(natives.parent().ok_or(CoreError::UnsafePath)?)?;
-        paths.remove(&natives)?;
-        paths.rename(&staging, &natives)?;
-        Ok(())
-    })();
-    let _ = paths.remove(&staging);
-    extraction?;
-    for child in ["java", "jna", "lwjgl", "netty"] {
-        paths.mkdir(&natives.join(child))?;
-    }
+    let (natives, temporary_natives) = prepare_natives(
+        &paths,
+        &directory.join(".sporium/natives").join(&entry.sha1),
+        &libraries.natives,
+        &cancelled,
+    )?;
     for (source, destination) in &assets.virtual_files {
         if cancelled() {
             return Err(CoreError::Cancelled);
@@ -118,17 +101,23 @@ pub fn prepare(
         }
         tracing::warn!("Optional nickname skin module unavailable");
     }
+    let identity = account
+        .map(|id| crate::microsoft::refresh(&manager.database, id))
+        .transpose()?;
     let plan = launch::resolve(LaunchInputs {
         paths: &paths,
         metadata: &metadata,
         runtime: &runtime,
         classpath: libraries.classpath,
         natives,
+        temporary_natives,
         game_dir: directory.into(),
         game_assets: assets.game_assets,
         asset_id: assets.id,
         logging,
         nickname,
+        default_memory_mb: settings.values.world.memory_mb,
+        identity: identity.as_ref(),
     })?;
     write_atomic(
         &paths,
@@ -141,6 +130,99 @@ pub fn prepare(
         .library
         .pin_loader(&instance.id, loader_version.as_deref())?;
     Ok(plan)
+}
+
+fn prepare_natives(
+    paths: &Paths,
+    destination: &Path,
+    archives: &[(PathBuf, Vec<String>)],
+    cancelled: &impl Fn() -> bool,
+) -> Result<(PathBuf, Option<tempfile::TempDir>), CoreError> {
+    // Leave room under MAX_PATH for LWJGL/JNA subdirectories and generated DLL names.
+    let long = |path: &Path| java_path(path).encode_utf16().count() >= 196;
+    let (destination, guard, isolated) = if long(destination) {
+        let temp_root = Paths::existing(&std::env::temp_dir())?;
+        let directory = tempfile::Builder::new()
+            .prefix("sporium-natives-")
+            .tempdir_in(temp_root.root())?;
+        if long(directory.path()) {
+            return Err(CoreError::UnsafePath);
+        }
+        let isolated = Paths::existing(directory.path())?;
+        (
+            isolated.root().to_path_buf(),
+            Some(directory),
+            Some(isolated),
+        )
+    } else {
+        (destination.to_path_buf(), None, None)
+    };
+    let target_paths = isolated.as_ref().unwrap_or(paths);
+    // Always unpack verified archives into a fresh directory, including repairs.
+    let staging = match isolated {
+        Some(ref root) => root.root().to_path_buf(),
+        None => paths
+            .root()
+            .join("launcher/staging")
+            .join(format!("natives-{}", uuid::Uuid::new_v4())),
+    };
+    let extraction = (|| {
+        target_paths.mkdir(&staging)?;
+        for (source, excludes) in archives {
+            extract_to(paths, source, target_paths, &staging, excludes, cancelled)?;
+        }
+        if cancelled() {
+            return Err(CoreError::Cancelled);
+        }
+        for child in ["java", "jna", "lwjgl", "netty"] {
+            target_paths.mkdir(&staging.join(child))?;
+        }
+        if isolated.is_none() {
+            paths.mkdir(destination.parent().ok_or(CoreError::UnsafePath)?)?;
+            paths.remove(&destination)?;
+            paths.rename(&staging, &destination)?;
+        }
+        Ok(())
+    })();
+    if isolated.is_none() {
+        let _ = paths.remove(&staging);
+    }
+    extraction?;
+    Ok((destination, guard))
+}
+
+#[cfg(all(test, windows))]
+mod native_tests {
+    use super::*;
+    use std::io::Write;
+
+    #[test]
+    fn long_native_paths_extract_into_an_owned_short_directory() {
+        let library = tempfile::tempdir().unwrap();
+        let paths = Paths::new(library.path()).unwrap();
+        let source = paths.root().join("shared/cache/test-natives.jar");
+        let mut archive = zip::ZipWriter::new(fs::File::create(&source).unwrap());
+        archive
+            .start_file("sample.dll", zip::write::SimpleFileOptions::default())
+            .unwrap();
+        archive.write_all(b"verified fixture").unwrap();
+        archive.finish().unwrap();
+        let destination = paths
+            .root()
+            .join("instances")
+            .join("a".repeat(190))
+            .join("natives");
+        let (native_path, guard) =
+            prepare_natives(&paths, &destination, &[(source, vec![])], &|| false).unwrap();
+        assert_eq!(
+            fs::read(native_path.join("sample.dll")).unwrap(),
+            b"verified fixture"
+        );
+        assert!(!destination.exists());
+        assert!(guard.is_some());
+        drop(guard);
+        assert!(!native_path.exists());
+    }
 }
 
 fn copy_asset(paths: &Paths, source: &Path, destination: &Path) -> Result<(), CoreError> {

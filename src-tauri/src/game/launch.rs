@@ -18,6 +18,7 @@ pub struct ResolvedLaunchPlan {
     pub java: PathBuf,
     pub classpath: Vec<PathBuf>,
     pub natives: PathBuf,
+    pub(crate) temporary_natives: Option<tempfile::TempDir>,
     pub jvm_args: Vec<String>,
     pub game_args: Vec<String>,
     pub game_dir: PathBuf,
@@ -33,11 +34,14 @@ pub struct LaunchInputs<'a> {
     pub runtime: &'a JavaRuntime,
     pub classpath: Vec<PathBuf>,
     pub natives: PathBuf,
+    pub(crate) temporary_natives: Option<tempfile::TempDir>,
     pub game_dir: PathBuf,
     pub game_assets: PathBuf,
     pub asset_id: String,
     pub logging: Option<PathBuf>,
     pub nickname: &'a str,
+    pub default_memory_mb: u32,
+    pub(crate) identity: Option<&'a crate::microsoft::Identity>,
 }
 
 pub fn resolve(input: LaunchInputs<'_>) -> Result<ResolvedLaunchPlan, CoreError> {
@@ -47,11 +51,14 @@ pub fn resolve(input: LaunchInputs<'_>) -> Result<ResolvedLaunchPlan, CoreError>
         runtime,
         classpath,
         natives,
+        temporary_natives,
         game_dir,
         game_assets,
         asset_id,
         logging,
         nickname,
+        default_memory_mb,
+        identity,
     } = input;
     let legacy = matches!(
         metadata.get("type").and_then(Value::as_str),
@@ -92,6 +99,22 @@ pub fn resolve(input: LaunchInputs<'_>) -> Result<ResolvedLaunchPlan, CoreError>
         ("resolution_width", "854".into()),
         ("resolution_height", "480".into()),
     ]);
+    if let Some(auth) = identity {
+        for (key, value) in [
+            ("auth_player_name", &auth.name),
+            ("auth_uuid", &auth.uuid),
+            ("auth_access_token", &auth.access),
+            ("clientid", &auth.client),
+            ("auth_xuid", &auth.xuid),
+        ] {
+            values.insert(key, value.clone());
+        }
+        values.insert("user_type", "msa".to_owned());
+        values.insert(
+            "auth_session",
+            format!("token:{}:{}", auth.access, auth.uuid),
+        );
+    }
     if let Some(logging) = &logging {
         values.insert("path", java_path(logging));
     }
@@ -112,6 +135,7 @@ pub fn resolve(input: LaunchInputs<'_>) -> Result<ResolvedLaunchPlan, CoreError>
     let default_memory = (available_mb / 2).clamp(1024, if legacy { 2048 } else { 4096 });
     let memory_mb = crate::projects::manifest(paths, &game_dir)?
         .and_then(|project| project.launch.memory_mib)
+        .or((default_memory_mb != 0).then_some(default_memory_mb))
         .map(u64::from)
         .map(|memory| {
             memory
@@ -178,6 +202,7 @@ pub fn resolve(input: LaunchInputs<'_>) -> Result<ResolvedLaunchPlan, CoreError>
         java: runtime.executable.clone().into(),
         classpath,
         natives,
+        temporary_natives,
         jvm_args,
         game_args,
         game_dir,
@@ -186,6 +211,32 @@ pub fn resolve(input: LaunchInputs<'_>) -> Result<ResolvedLaunchPlan, CoreError>
         logging,
         memory_mb,
     })
+}
+
+pub fn connect_to_server(
+    args: &mut Vec<String>,
+    address: &str,
+    version: &str,
+) -> Result<(), CoreError> {
+    let (host, port) = crate::world::endpoint(address).ok_or(CoreError::InvalidSettings)?;
+    let parts: Vec<u32> = version
+        .split('.')
+        .map(str::parse)
+        .collect::<Result<_, _>>()
+        .map_err(|_| CoreError::UnsupportedVersion)?;
+    if parts.as_slice() >= &[1, 20][..] {
+        args.extend(["--quickPlayMultiplayer".to_owned(), address.to_owned()]);
+    } else if parts.as_slice() >= &[1, 6][..] {
+        args.extend([
+            "--server".to_owned(),
+            host,
+            "--port".to_owned(),
+            port.to_string(),
+        ]);
+    } else {
+        return Err(CoreError::UnsupportedVersion);
+    }
+    Ok(())
 }
 
 pub fn spawn(plan: &ResolvedLaunchPlan, log: &Path) -> Result<Child, CoreError> {
@@ -206,6 +257,18 @@ pub fn spawn(plan: &ResolvedLaunchPlan, log: &Path) -> Result<Child, CoreError> 
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn join_arguments_match_version_and_validated_endpoint() {
+        let mut modern = Vec::new();
+        connect_to_server(&mut modern, "play.example:25570", "1.21.1").unwrap();
+        assert_eq!(modern, ["--quickPlayMultiplayer", "play.example:25570"]);
+        let mut legacy = Vec::new();
+        connect_to_server(&mut legacy, "play.example", "1.19.4").unwrap();
+        assert_eq!(legacy, ["--server", "play.example", "--port", "25565"]);
+        assert!(connect_to_server(&mut vec![], "play.example", "1.5.2").is_err());
+        assert!(connect_to_server(&mut vec![], "bad address", "1.21").is_err());
+    }
 
     #[test]
     fn local_plan_preserves_paths_and_skips_demo_features() {
@@ -229,11 +292,14 @@ mod tests {
                 runtime: &runtime,
                 classpath: classpath.clone(),
                 natives: paths.root().join("natives"),
+                temporary_natives: None,
                 game_dir: game_dir.clone(),
                 game_assets: paths.root().join("assets"),
                 asset_id: "34".into(),
                 logging: None,
                 nickname,
+                default_memory_mb: 0,
+                identity: None,
             })
         };
         let plan = resolve_local(&metadata, "Local_123").unwrap();

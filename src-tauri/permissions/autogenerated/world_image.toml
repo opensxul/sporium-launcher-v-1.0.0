@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-world-image"
+description = "Enables the world_image command without any pre-configured scope."
+commands.allow = ["world_image"]
+
+[[permission]]
+identifier = "deny-world-image"
+description = "Denies the world_image command without any pre-configured scope."
+commands.deny = ["world_image"]

@@ -72,7 +72,18 @@ pub fn extract(
     excludes: &[String],
     cancelled: &impl Fn() -> bool,
 ) -> Result<(), CoreError> {
-    paths.checked(source)?;
+    extract_to(paths, source, paths, destination, excludes, cancelled)
+}
+
+pub(crate) fn extract_to(
+    source_paths: &Paths,
+    source: &Path,
+    paths: &Paths,
+    destination: &Path,
+    excludes: &[String],
+    cancelled: &impl Fn() -> bool,
+) -> Result<(), CoreError> {
+    source_paths.checked(source)?;
     paths.mkdir(destination)?;
     let mut zip =
         zip::ZipArchive::new(File::open(source)?).map_err(|_| CoreError::UnsafeArchive)?;

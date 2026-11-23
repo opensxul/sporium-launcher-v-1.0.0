@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import type { GameRequest, GameState } from '../bindings/core';
 import { backend, normalizeError } from '../services/backend';
@@ -19,18 +20,25 @@ export function GameProvider({ children }: { children: ReactNode }) {
     if (!backend.isDesktop) return;
     let active = true;
     let timer: ReturnType<typeof setTimeout>;
+    let running = new Set<string>();
+    let wait = 3500;
     async function tick() {
       try {
         const view = await backend.gameState();
         if (!active) return;
+        wait = jobActive(view) ? 500 : view.sessions.some((s) => s.running) ? 1500 : 3500;
         setState(view);
+        const next = new Set(view.sessions.filter((s) => s.running).map((s) => s.instanceId));
+        if ([...next].some((id) => !running.has(id)))
+          void invoke('window_after_launch').catch((reason) => setError(normalizeError(reason)));
+        running = next;
         const key = view.job ? `${view.job.instanceId}:${view.job.phase}` : '';
         if (key !== completed.current && view.job?.phase === 'completed') void reload();
         completed.current = key;
       } catch (reason) {
         if (active) setError(normalizeError(reason));
       } finally {
-        if (active) timer = setTimeout(() => void tick(), 750);
+        if (active) timer = setTimeout(() => void tick(), wait);
       }
     }
     void tick();

@@ -63,6 +63,16 @@ pub(crate) fn no_links(path: &Path) -> Result<(), CoreError> {
 }
 
 impl Paths {
+    pub(crate) fn existing(root: &Path) -> Result<Self, CoreError> {
+        if !root.is_absolute() || !root.is_dir() {
+            return Err(CoreError::UnsafePath);
+        }
+        no_links(root)?;
+        Ok(Self {
+            root: root.canonicalize()?,
+        })
+    }
+
     pub fn new(root: &Path) -> Result<Self, CoreError> {
         if !root.is_absolute() {
             return Err(CoreError::UnsafePath);

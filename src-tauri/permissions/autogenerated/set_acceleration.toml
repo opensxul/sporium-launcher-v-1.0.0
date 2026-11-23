@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-set-acceleration"
+description = "Enables the set_acceleration command without any pre-configured scope."
+commands.allow = ["set_acceleration"]
+
+[[permission]]
+identifier = "deny-set-acceleration"
+description = "Denies the set_acceleration command without any pre-configured scope."
+commands.deny = ["set_acceleration"]

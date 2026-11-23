@@ -84,6 +84,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ContentRestorePoint::decl(&config),
         Locale::decl(&config),
         Motion::decl(&config),
+        sporium_lib::world::AfterLaunch::decl(&config),
+        sporium_lib::world::WorldSettings::decl(&config),
         Settings::decl(&config),
         SettingsSnapshot::decl(&config),
         SaveSettingsRequest::decl(&config),

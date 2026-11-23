@@ -11,6 +11,7 @@ import './styles/content.css';
 import './styles/projects.css';
 import './styles/polish.css';
 import './styles/branding.css';
+import './styles/world.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

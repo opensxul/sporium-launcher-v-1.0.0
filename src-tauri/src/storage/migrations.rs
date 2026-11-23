@@ -2,12 +2,13 @@ use rusqlite::{Connection, TransactionBehavior};
 
 use crate::error::CoreError;
 
-pub const SCHEMA_VERSION: u32 = 3;
+pub const SCHEMA_VERSION: u32 = 4;
 
 const MIGRATIONS: &[&str] = &[
     include_str!("../../migrations/001_settings.sql"),
     include_str!("../../migrations/002_instances.sql"),
     include_str!("../../migrations/003_local_profiles.sql"),
+    include_str!("../../migrations/004_microsoft.sql"),
 ];
 
 pub fn migrate(connection: &mut Connection) -> Result<(), CoreError> {

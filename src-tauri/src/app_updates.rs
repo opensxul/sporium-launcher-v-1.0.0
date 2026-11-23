@@ -27,14 +27,16 @@ pub struct AppUpdate {
 }
 
 #[tauri::command]
-pub async fn app_update_check(app: tauri::AppHandle) -> Option<AppUpdate> {
+pub async fn app_update_check(app: tauri::AppHandle) -> Result<Option<AppUpdate>, CommandError> {
     // Offline, missing releases and current versions produce no visible check UI.
     let updater = app
         .updater_builder()
         .timeout(std::time::Duration::from_secs(20))
         .build()
-        .ok()?;
-    let update = updater.check().await.ok()??;
+        .map_err(|_| CoreError::InvalidSettings)?;
+    let Some(update) = updater.check().await.map_err(|_| CoreError::Network)? else {
+        return Ok(None);
+    };
     if update.download_url.scheme() != "https"
         || update.download_url.host_str() != Some("github.com")
         || !update
@@ -42,7 +44,7 @@ pub async fn app_update_check(app: tauri::AppHandle) -> Option<AppUpdate> {
             .path()
             .starts_with("/opensxul/sporium-launcher-v-1.0.0/releases/download/")
     {
-        return None;
+        return Err(CoreError::Integrity.into());
     }
     let info = AppUpdate {
         version: update.version.clone(),
@@ -55,8 +57,11 @@ pub async fn app_update_check(app: tauri::AppHandle) -> Option<AppUpdate> {
             .collect(),
         size: update.raw_json.get("size").and_then(|value| value.as_u64()),
     };
-    *app.state::<Updates>().pending.lock().ok()? = Some(update);
-    Some(info)
+    *app.state::<Updates>()
+        .pending
+        .lock()
+        .map_err(|_| CoreError::Worker)? = Some(update);
+    Ok(Some(info))
 }
 
 fn active(state: &AppState) -> bool {

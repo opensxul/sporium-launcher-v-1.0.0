@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-microsoft-begin"
+description = "Enables the microsoft_begin command without any pre-configured scope."
+commands.allow = ["microsoft_begin"]
+
+[[permission]]
+identifier = "deny-microsoft-begin"
+description = "Denies the microsoft_begin command without any pre-configured scope."
+commands.deny = ["microsoft_begin"]

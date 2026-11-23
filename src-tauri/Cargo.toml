@@ -1,6 +1,6 @@
 [package]
 name = "sporium"
-version = "1.0.1"
+version = "2.0.0"
 description = "Sporium Minecraft launcher and instance library"
 edition = "2024"
 rust-version = "1.98"
@@ -27,7 +27,8 @@ required-features = ["dev-tools"]
 tauri-build = { version = "=2.6.3", features = [] }
 
 [dependencies]
-tauri = { version = "=2.11.6", features = [] }
+tauri = { version = "=2.11.6", features = ["tray-icon"] }
+tokio = { version = "=1.53.1", features = ["net", "time", "io-util"] }
 tauri-plugin-updater = { version = "=2.12.0", default-features = false, features = ["native-tls", "system-proxy"] }
 rusqlite = { version = "=0.40.2", features = ["bundled"] }
 serde = { version = "=1.0.229", features = ["derive"] }
@@ -41,7 +42,7 @@ uuid = { version = "=1.26.1", features = ["v4"] }
 fs2 = "=0.4.3"
 opener = "=0.8.5"
 tempfile = "=3.27.0"
-reqwest = { version = "=0.13.5", default-features = false, features = ["blocking", "json", "native-tls", "system-proxy"] }
+reqwest = { version = "=0.13.5", default-features = false, features = ["blocking", "form", "json", "native-tls", "system-proxy"] }
 zip = { version = "=8.6.0", default-features = false, features = ["deflate"] }
 sha1 = "=0.11.0"
 sha2 = "=0.11.0"
@@ -54,7 +55,8 @@ rfd = "=0.17.2"
 sysinfo = { version = "=0.39.6", default-features = false, features = ["system"] }
 
 [target.'cfg(windows)'.dependencies]
-windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_System_JobObjects", "Win32_System_Threading", "Win32_Security"] }
+windows-registry = "=0.6.1"
+windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_System_JobObjects", "Win32_System_Threading", "Win32_Security", "Win32_Security_Cryptography"] }
 
 [dev-dependencies]
 minisign-verify = "=0.2.5"
