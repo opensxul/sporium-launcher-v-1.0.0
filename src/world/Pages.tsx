@@ -173,7 +173,8 @@ function LaunchBar() {
     data.settings.values.localNickname;
   const job = game.state.job;
   const working = jobActive(game.state);
-  const running = game.state.sessions.some((s) => s.running && s.instanceId === chosen?.id);
+  const session = game.state.sessions.find((s) => s.instanceId === chosen?.id);
+  const running = session?.running;
   async function play() {
     if (guard.current) return;
     if ((!chosen && !version) || (cfg.autoJoin && !cfg.address)) {
@@ -265,6 +266,14 @@ function LaunchBar() {
         </Link>
       </div>
       {job && (working || job.phase === 'failed') && <GameActivity compact />}
+      {!working && !pending && session && !session.running && !!session.exitCode && (
+        <p className="game-exit" role="alert">
+          {t('game.exit')}: {session.exitCode}{' '}
+          <Link className="text-link" to={'/instance/' + session.instanceId}>
+            {t('ui.details')}
+          </Link>
+        </p>
+      )}
       {error && <ErrorNotice error={error} />}
     </>
   );

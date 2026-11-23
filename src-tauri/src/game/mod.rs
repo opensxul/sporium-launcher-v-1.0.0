@@ -36,6 +36,7 @@ struct Tracked {
     child: Child,
     view: GameSession,
     _group: job_object::ProcessGroup,
+    _temporary_natives: Option<tempfile::TempDir>,
     _lease: File,
 }
 #[derive(Default)]
@@ -309,6 +310,7 @@ impl GameManager {
                             child,
                             view,
                             _group: group,
+                            _temporary_natives: plan.temporary_natives,
                             _lease: lease,
                         });
                     }
