@@ -122,6 +122,10 @@ export const gameRu = {
   'java.managed': 'Установлена Sporium',
   'java.system': 'Найдена на компьютере',
   'java.valid': 'Java проверена',
+  'error.SIGN_IN': 'Не удалось войти в Microsoft. Откройте профиль и повторите вход.',
+  'error.ENTITLEMENT': 'Аккаунт не подтвердил право на Minecraft Java Edition.',
+  'error.PROFILE_MISMATCH':
+    'Ник этого профиля должен совпадать с именем Minecraft в аккаунте Microsoft.',
   'error.NETWORK': 'Не удалось загрузить файл. Проверь подключение и повтори попытку.',
   'error.INTEGRITY':
     'Хеш или размер файла не совпал с официальными данными. Повтори проверку файлов.',
@@ -260,6 +264,10 @@ export const gameEn: Record<keyof typeof gameRu, string> = {
   'java.managed': 'Installed by Sporium',
   'java.system': 'Found on this computer',
   'java.valid': 'Java verified',
+  'error.SIGN_IN': 'Microsoft sign-in failed. Open your profile and sign in again.',
+  'error.ENTITLEMENT': 'This account has no confirmed Minecraft Java Edition entitlement.',
+  'error.PROFILE_MISMATCH':
+    'This profile nickname must match the Minecraft name on the Microsoft account.',
   'error.NETWORK': 'Could not download a file. Check your connection and retry.',
   'error.INTEGRITY': 'File hash or size differs from official metadata. Retry verification.',
   'error.UNSAFE_ARCHIVE':

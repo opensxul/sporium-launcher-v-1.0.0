@@ -1,3 +1,4 @@
+import distribution from '../../config/sporium.json';
 import { invoke, isTauri } from '@tauri-apps/api/core';
 import type {
   PackPreview,
@@ -100,6 +101,9 @@ const errorCodes: readonly ErrorCode[] = [
   'LIBRARY_BUSY',
   'SOURCE_CHANGED',
   'OPEN_FOLDER_FAILED',
+  'SIGN_IN',
+  'ENTITLEMENT',
+  'PROFILE_MISMATCH',
   'NETWORK',
   'INTEGRITY',
   'UNSAFE_ARCHIVE',
@@ -429,6 +433,7 @@ export function browserPreview(): Bootstrap {
         {
           id: '00000000-0000-4000-8000-000000000001',
           nickname: 'SporiumLocal',
+          microsoft: false,
           offlineUuid: '00000000-0000-3000-8000-000000000001',
         },
       ],
@@ -437,9 +442,9 @@ export function browserPreview(): Bootstrap {
     },
     info: {
       name: 'Sporium',
-      version: '0.1.0',
+      version: '2.0.0',
       platform: 'browser',
-      databaseSchema: 3,
+      databaseSchema: 4,
       dataDirectory: '',
     },
     settings: {
@@ -461,6 +466,18 @@ export function browserPreview(): Bootstrap {
         nicknameSkins: true,
         downloadConcurrency: 6,
         cacheLimitMb: 0,
+        world: {
+          address: distribution.address,
+          version: '',
+          feed: '',
+          autoJoin: true,
+          afterLaunch: 'open',
+          autoUpdates: true,
+          particles: true,
+          parallax: true,
+          intensity: 55,
+          memoryMb: 0,
+        },
       },
     },
   };

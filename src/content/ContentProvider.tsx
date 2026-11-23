@@ -46,10 +46,12 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     if (!backend.isDesktop) return;
     let active = true;
     let timer: ReturnType<typeof setTimeout>;
+    let wait = 4000;
     async function tick() {
       try {
         const value = await backend.contentState();
         if (active) {
+          wait = contentActive(value) ? 700 : 4000;
           setJob(value);
           const key = value ? value.instanceId + ':' + value.phase : '';
           if (key !== observed.current) {
@@ -60,7 +62,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       } catch (reason) {
         if (active) setError(normalizeError(reason));
       } finally {
-        if (active) timer = setTimeout(() => void tick(), 800);
+        if (active) timer = setTimeout(() => void tick(), wait);
       }
     }
     void tick();

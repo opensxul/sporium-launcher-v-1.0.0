@@ -5,6 +5,7 @@ import { useFoundation } from '../app/context';
 import { useLibrary } from '../library/context';
 import { backend, normalizeError, type BackendError } from '../services/backend';
 import { ErrorNotice, Toggle } from '../components/ui';
+import { MicrosoftLogin } from '../world/MicrosoftLogin';
 import { Modal } from '../components/Modal';
 
 const skins = new Map<string, Promise<SkinView>>();
@@ -202,7 +203,12 @@ export function ProfilesSettings() {
             <Skin key={profile.nickname} nickname={profile.nickname} full />
             <div>
               <h3>{profile.nickname}</h3>
-              <p>{t('account.guest')}</p>
+              <p>{profile.microsoft ? 'Microsoft · Minecraft Java' : t('account.guest')}</p>
+              <MicrosoftLogin
+                id={profile.id}
+                nickname={profile.nickname}
+                linked={profile.microsoft}
+              />
               <div className="instance-actions">
                 <button
                   className="button secondary"
@@ -218,7 +224,7 @@ export function ProfilesSettings() {
                 </button>
                 <button
                   className="button secondary"
-                  disabled={!desktop || busy}
+                  disabled={!desktop || busy || profile.microsoft}
                   onClick={() => {
                     setNickname(profile.nickname);
                     setDialog({ action: 'rename', profile });

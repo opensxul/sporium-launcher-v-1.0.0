@@ -132,7 +132,11 @@ export type Locale = "ru-RU" | "en-US";
 
 export type Motion = "system" | "reduced";
 
-export type Settings = { schemaVersion: number, locale: Locale, motion: Motion, uiScale: number, versionVisibility: VersionVisibility, customJavaPath: string | null, localNickname: string, nicknameSkins: boolean, downloadConcurrency: number, cacheLimitMb: number, };
+export type AfterLaunch = "open" | "minimize" | "tray";
+
+export type WorldSettings = { address: string, version: string, feed: string, autoJoin: boolean, afterLaunch: AfterLaunch, autoUpdates: boolean, particles: boolean, parallax: boolean, intensity: number, memoryMb: number, };
+
+export type Settings = { schemaVersion: number, locale: Locale, motion: Motion, uiScale: number, versionVisibility: VersionVisibility, customJavaPath: string | null, localNickname: string, nicknameSkins: boolean, downloadConcurrency: number, cacheLimitMb: number, world: WorldSettings, };
 
 export type SettingsSnapshot = { values: Settings, revision: number, };
 
@@ -142,7 +146,7 @@ export type AppInfo = { name: string, version: string, platform: string, databas
 
 export type Bootstrap = { info: AppInfo, settings: SettingsSnapshot, profiles: ProfileSnapshot, };
 
-export type ErrorCode = "RATE_LIMITED" | "CONTENT_INCOMPATIBLE" | "CONTENT_UNSUPPORTED" | "CONTENT_CONFLICT" | "DEPENDENCY_CONFLICT" | "STORAGE_UNAVAILABLE" | "DATA_CORRUPT" | "SCHEMA_TOO_NEW" | "INVALID_SETTINGS" | "SETTINGS_CONFLICT" | "WORKER_UNAVAILABLE" | "INVALID_INPUT" | "NOT_FOUND" | "RECORD_CONFLICT" | "UNSAFE_PATH" | "LIBRARY_BUSY" | "SOURCE_CHANGED" | "OPEN_FOLDER_FAILED" | "NETWORK" | "INTEGRITY" | "UNSAFE_ARCHIVE" | "CANCELLED" | "UNSUPPORTED_VERSION" | "JAVA_UNAVAILABLE" | "INSTANCE_BUSY" | "LAUNCH_FAILED";
+export type ErrorCode = "PROFILE_MISMATCH" | "ENTITLEMENT" | "SIGN_IN" | "RATE_LIMITED" | "CONTENT_INCOMPATIBLE" | "CONTENT_UNSUPPORTED" | "CONTENT_CONFLICT" | "DEPENDENCY_CONFLICT" | "STORAGE_UNAVAILABLE" | "DATA_CORRUPT" | "SCHEMA_TOO_NEW" | "INVALID_SETTINGS" | "SETTINGS_CONFLICT" | "WORKER_UNAVAILABLE" | "INVALID_INPUT" | "NOT_FOUND" | "RECORD_CONFLICT" | "UNSAFE_PATH" | "LIBRARY_BUSY" | "SOURCE_CHANGED" | "OPEN_FOLDER_FAILED" | "NETWORK" | "INTEGRITY" | "UNSAFE_ARCHIVE" | "CANCELLED" | "UNSUPPORTED_VERSION" | "JAVA_UNAVAILABLE" | "INSTANCE_BUSY" | "LAUNCH_FAILED";
 
 export type CommandError = { code: ErrorCode, retryable: boolean, };
 
@@ -198,7 +202,7 @@ export type VersionCatalog = { versions: Array<GameVersion>, latestRelease: stri
 
 export type JavaRuntime = { executable: string, major: number, version: string, architecture: string, managed: boolean, };
 
-export type GameAction = "install" | "local";
+export type GameAction = "install" | "local" | "world";
 
 export type GameRequest = { id: string, action: GameAction, };
 
@@ -224,7 +228,7 @@ export type ShortcutPlan = { instanceId: string, arguments: Array<string>, avail
 
 export type SetFavorite = { id: string, expectedRevision: number, favorite: boolean, };
 
-export type LocalProfile = { id: string, nickname: string, offlineUuid: string, };
+export type LocalProfile = { id: string, nickname: string, offlineUuid: string, microsoft: boolean, };
 
 export type ProfileSnapshot = { profiles: Array<LocalProfile>, activeProfileId: string, revision: number, };
 

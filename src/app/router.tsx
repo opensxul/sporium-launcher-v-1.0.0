@@ -1,7 +1,8 @@
 import { createHashRouter, Navigate } from 'react-router-dom';
 import { Shell } from './Shell';
 import { RouteFailure } from './RouteFailure';
-import { HomePage } from '../pages/Home';
+import { LibraryHome } from '../pages/Home';
+import { WorldHome, NewsPage, GalleryPage, ProfilePage } from '../world/Pages';
 import { LibraryPage } from '../pages/Library';
 import { DownloadsPage, NotFoundPage } from '../pages/StaticPages';
 import { CatalogPage } from '../content/CatalogPage';
@@ -25,7 +26,11 @@ export const router = createHashRouter([
     ),
     errorElement: <RouteFailure />,
     children: [
-      { path: '/', element: <HomePage /> },
+      { path: '/', element: <WorldHome /> },
+      { path: '/library', element: <LibraryHome /> },
+      { path: '/news', element: <NewsPage /> },
+      { path: '/world', element: <GalleryPage /> },
+      { path: '/profile', element: <ProfilePage /> },
       { path: '/catalog', element: <CatalogPage /> },
       { path: '/instances', element: <LibraryPage /> },
       { path: '/instances/:kind', element: <LibraryPage /> },

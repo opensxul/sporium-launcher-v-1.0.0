@@ -16,7 +16,7 @@ import { LibraryStatus } from '../library/LibraryStatus';
 import { useGame } from '../game/context';
 import { useContent } from '../content/context';
 
-export function HomePage() {
+export function LibraryHome() {
   const { t, desktop, data } = useFoundation();
   const game = useGame();
   const content = useContent();
