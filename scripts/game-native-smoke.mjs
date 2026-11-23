@@ -90,7 +90,7 @@ try {
   await page.screenshot({ path: path.join(artifacts, 'versions.png'), fullPage: true });
   checks.push('version visibility saved through real settings IPC');
 
-  await go('/');
+  await go('/library');
   await page.getByRole('button', { name: 'Создать сборку', exact: true }).first().click();
   const select = page.getByLabel('Версия Minecraft', { exact: true });
   for (const version of ['26.3', '26.4-snapshot-1', 'b1.7.3', 'a1.2.6']) {

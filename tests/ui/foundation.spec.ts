@@ -5,7 +5,7 @@ test('home opens real library routes, search is local, unsupported actions are e
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/');
+  await page.goto('/#/library');
   await expect(page.getByRole('heading', { name: 'Мои сборки', exact: true })).toBeVisible();
   await expect(page.getByRole('note')).toContainText('Веб-предпросмотр');
   await expect(page.locator('.library-card')).toHaveCount(6);
@@ -38,7 +38,7 @@ test('appearance is only in settings and browser preview never reports a success
     .getByRole('navigation', { name: 'Разделы настроек' })
     .getByRole('link', { name: 'Анимации', exact: true })
     .click();
-  await expect(page.getByRole('switch')).toBeDisabled();
+  await expect(page.getByRole('switch').first()).toBeDisabled();
   await expect(page.getByText('Настройки сохранены')).toHaveCount(0);
 });
 
@@ -47,14 +47,14 @@ test('unknown library and unknown route have a safe way home', async ({ page }) 
     await page.goto(path);
     await expect(page.getByRole('heading', { name: 'Здесь пока нет тропинки' })).toBeVisible();
     await page.getByRole('link', { name: 'На главную', exact: true }).click();
-    await expect(page.getByRole('heading', { name: 'Мои сборки', exact: true })).toBeVisible();
+    await expect(page.locator('.forest-hero')).toBeVisible();
   }
 });
 
 test('shell fits supported widths and respects system reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  await expect(page.locator('.library-card')).toHaveCount(6);
+  await expect(page.locator('.forest-hero')).toBeVisible();
   for (const width of [1400, 1000, 900, 600, 390]) {
     await page.setViewportSize({ width, height: 900 });
     expect(
@@ -62,7 +62,9 @@ test('shell fits supported widths and respects system reduced motion', async ({ 
     ).toBe(true);
   }
   expect(
-    await page.locator('.page').evaluate((element) => getComputedStyle(element).animationName),
+    await page
+      .locator('.forest-haze')
+      .evaluate((element) => getComputedStyle(element).animationName),
   ).toBe('none');
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Перейти к содержимому' })).toBeFocused();
