@@ -229,7 +229,7 @@ try {
     '/settings/appearance',
   ]) {
     await page
-      .locator('aside a[href="#' + (route.startsWith('/settings') ? '/settings' : route) + '"]')
+      .locator('.sidebar a[href="#' + (route.startsWith('/settings') ? '/settings' : route) + '"]')
       .click();
     await expect(page).toHaveURL(new RegExp('#' + route + '$'));
   }
