@@ -22,7 +22,7 @@
 
 ## Иллюстрации интерфейса
 
-Файлы в `public/branding/scenery/` созданы в ImageGen по мотивам референса. Баннер показывает вымышленный мир, а галерея сервера получает скриншоты из настроенного источника.
+Файлы в `public/branding/scenery/` созданы в ImageGen по мотивам референса. Баннер и фоны карточек иллюстрируют вымышленные миры. Иконки сборок приходят из Modrinth, а галерея сервера получает скриншоты из настроенного источника.
 
 <details>
 <summary>Промпты для иллюстраций</summary>
@@ -38,5 +38,9 @@
 **fly-agaric.webp**
 
 > Create a single original isolated 3D-inspired Minecraft pixel art fly agaric mushroom icon with a scarlet cubic stepped cap shaped like a broad red mushroom and cream square speckles, thick short textured cream stem, standing on a small grassy dirt cube. Three-quarter front view, with clear crisp pixel grid and simple graphic silhouette, light from upper left, restrained warm colors, tiny detailed block surface, premium voxel game launcher emblem. Center it, leave 8% transparent margin all around, entire sprite including cube visible and no separate objects, no glow outside, no lettering, no logo text, no watermark. Genuinely transparent background. Legibility as small as 64px, a red mushroom is the unmistakable primary element.
+
+**autumn-cottage.webp, amethyst-islands.webp, medieval-village.webp**
+
+> Create a 1:1 square production-ready sprite sheet made of THREE equally tall horizontal panoramic pixel-voxel game landscapes stacked vertically, edge-to-edge with absolutely no borders, no margins, no text, no labels, no symbols, no watermark. Each of the 3 separate panoramic rows is an illustration for a modpack card header in a Minecraft-inspired desktop launcher. Layout strict: row 1 occupies precisely top 33.33%, row 2 exactly middle 33.33%, row 3 exactly bottom 33.33%. Each is a high quality game-world landscape with one clear scene, close attention to coherent cubical block geometry and crunchy pixel textures, pixelated lighting. TOP: maple forest and a cozy timber cottage with glowing windows by a river on a warm peach sunset. MIDDLE: dark fantasy purple block cliffs and floating islands with amethyst-lit square towers and purple mist, no huge creature that eclipses scenery. BOTTOM: a medieval walled stone-and-timber village in a verdant valley framed by cube trees in crisp late-morning blue sunlight. Attractive, original imagery with clean separation between the three rows and completely different color and lighting in each. All important content is contained in the central band of each separate panel, suitable for crop. No interface elements, no buttons, no type, no text, no screenshots of any existing branded product. The three rows meet each other flush with a sharp horizontal transition.
 
 </details>

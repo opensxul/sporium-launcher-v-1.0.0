@@ -198,16 +198,24 @@
 .popular-cover {
   min-height: 76px;
   aspect-ratio: 2.15;
-  display: grid;
-  place-items: center;
-  background:
-    url('/branding/pixel/stone.png'), linear-gradient(144deg, var(--forest), var(--background));
+  display: flex;
+  align-items: flex-start;
+  padding: 8px;
+  background: var(--forest) url('/branding/scenery/autumn-cottage.webp') center / cover no-repeat;
   border-bottom: 1px solid var(--border);
 }
+.popular-card:nth-child(2) .popular-cover {
+  background-image: url('/branding/scenery/amethyst-islands.webp');
+}
+.popular-card:nth-child(3) .popular-cover {
+  background-image: url('/branding/scenery/medieval-village.webp');
+}
 .popular-cover .project-icon {
-  width: auto;
-  height: 78%;
-  aspect-ratio: 1;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 1px solid #ffffff33;
+  box-shadow: 0 2px 5px #0008;
 }
 .popular-cover .project-icon img {
   object-fit: contain;
