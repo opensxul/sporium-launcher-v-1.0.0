@@ -17,7 +17,9 @@ test('home opens real library routes, search is local, unsupported actions are e
   const library = page
     .locator('.page')
     .filter({ has: page.getByRole('heading', { name: 'Fabric', exact: true }) });
-  await expect(library.getByRole('button', { name: 'Создать сборку', exact: true })).toBeDisabled();
+  await expect(
+    library.locator('header').getByRole('button', { name: 'Создать сборку', exact: true }),
+  ).toBeDisabled();
   await expect(page.getByText('Здесь начнётся новая история')).toBeVisible();
   expect(errors).toEqual([]);
 });

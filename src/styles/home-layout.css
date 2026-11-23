@@ -13,6 +13,9 @@
   gap: 5px;
   padding-block: 7px 17px;
 }
+.sidebar {
+  background: var(--background) url('/branding/scenery/moss-stone.webp') center / 100% 100% no-repeat;
+}
 .sidebar-mark {
   image-rendering: pixelated;
   flex: none;
@@ -50,11 +53,12 @@
   border-color: var(--border);
 }
 .forest-picture {
-  background-position: center 40%;
+  background-image: url('/branding/scenery/castle-sunset.webp');
+  background-position: 57% 53%;
 }
 .forest-shade {
   background:
-    linear-gradient(90deg, #141815ed 1%, #151815eb 22%, #15191694 49%, #16201b26 100%),
+    linear-gradient(90deg, #141815bb 1%, #151815ab 22%, #15191679 49%, #16201b16 100%),
     linear-gradient(0deg, #11150c87, transparent 44%);
 }
 .forest-hero::after {

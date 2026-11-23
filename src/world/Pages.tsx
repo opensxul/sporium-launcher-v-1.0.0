@@ -338,7 +338,7 @@ function ForestBanner({ children }: { children: ReactNode }) {
       )}
       <img
         className="forest-mark"
-        src="/branding/pixel/mushroom.png"
+        src="/branding/scenery/fly-agaric.webp"
         width={80}
         height={80}
         alt=""

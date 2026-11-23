@@ -63,7 +63,7 @@ export function Shell() {
         <NavLink to="/" className="brand" aria-label="Sporych Launcher">
           <img
             className="sidebar-mark"
-            src="/branding/pixel/mushroom.png"
+            src="/branding/scenery/fly-agaric.webp"
             width={64}
             height={64}
             alt=""
