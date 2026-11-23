@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { WorldSettings, DesktopOptions } from '../world/WorldSettings';
 import { BrandMark } from '../components/BrandMark';
+import { PixelIcon } from '../components/PixelIcon';
 import { Check, HardDrive, Info, LoaderCircle, ShieldCheck, Sparkles } from 'lucide-react';
 import { NavLink, useBeforeUnload, useBlocker, useParams } from 'react-router-dom';
 import { useFoundation } from '../app/context';
@@ -26,6 +27,19 @@ const sections = [
   'advanced',
   'about',
 ] as const;
+
+const sectionIcon = {
+  accounts: 'profile',
+  minecraft: 'instances',
+  java: 'java',
+  catalog: 'catalog',
+  downloads: 'downloads',
+  storage: 'storage',
+  appearance: 'light',
+  animations: 'world',
+  advanced: 'settings',
+  about: 'home',
+} as const;
 
 export function SettingsPage() {
   const { section = 'appearance' } = useParams();
@@ -110,6 +124,7 @@ export function SettingsPage() {
         <nav className="settings-navigation" aria-label={t('settings.nav')}>
           {sections.map((value) => (
             <NavLink key={value} to={`/settings/${value}`}>
+              <PixelIcon name={sectionIcon[value]} />
               {t(`settings.${value}`)}
             </NavLink>
           ))}
@@ -236,7 +251,7 @@ export function SettingsPage() {
           {currentSection === 'about' && (
             <div className="settings-detail">
               <BrandMark />
-              <h3>Sporium</h3>
+              <h3>Sporych Launcher</h3>
               <p>{t('settings.aboutBody')}</p>
               <div className="version-line">
                 <Info size={16} />

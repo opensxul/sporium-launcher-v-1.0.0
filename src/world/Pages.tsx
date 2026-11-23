@@ -6,15 +6,11 @@ import {
   ArrowUpRight,
   Box,
   ChevronRight,
-  CircleUserRound,
-  Compass,
   Image as ImageIcon,
   Newspaper,
-  Play,
   Radio,
   RefreshCw,
   Signal,
-  Trees,
   Users,
 } from 'lucide-react';
 import { useFoundation } from '../app/context';
@@ -27,6 +23,8 @@ import { ProfilesSettings, Skin } from '../game/Profiles';
 import { backend, normalizeError, BackendError } from '../services/backend';
 import { ErrorNotice } from '../components/ui';
 import { Modal } from '../components/Modal';
+import { PixelIcon } from '../components/PixelIcon';
+import { InstanceCard } from '../library/InstanceCard';
 import { GameActivity } from '../game/GameActivity';
 
 function useWords() {
@@ -238,7 +236,7 @@ function LaunchBar() {
           }
           onClick={() => void play()}
         >
-          <Play size={23} fill="currentColor" />
+          <PixelIcon name="play" />
           <strong>{action}</strong>
         </button>
         <div className="launch-target">
@@ -305,86 +303,118 @@ function FeedNotice({ gallery = false }: { gallery?: boolean }) {
 export function WorldHome() {
   const { data } = useFoundation();
   const { feed } = useWorld();
+  const { snapshot, loading } = useLibrary();
   const w = useWords();
   const cfg = data.settings.values.world;
   const hero = useRef<HTMLElement>(null);
   const lead = feed?.news[0];
+  const instances = snapshot.instances
+    .filter((item) => item.status === 'installed')
+    .sort((a, b) => (b.lastPlayedAt ?? 0) - (a.lastPlayedAt ?? 0))
+    .slice(0, 3);
   return (
     <div className="world-home">
       <div className="world-head">
         <span className="world-symbol">
-          <Trees size={18} />
+          <PixelIcon name="home" />
         </span>
         <h1>{w('Главная', 'Home')}</h1>
       </div>
+      <div className="world-feature">
+        <section
+          className="forest-hero"
+          ref={hero}
+          style={{ '--effect': cfg.intensity / 100 } as CSSProperties}
+          onPointerMove={(e) => {
+            if (!cfg.parallax) return;
+            if (
+              data.settings.values.motion === 'reduced' ||
+              matchMedia('(prefers-reduced-motion: reduce)').matches
+            )
+              return;
+            const r = e.currentTarget.getBoundingClientRect();
+            e.currentTarget.style.setProperty(
+              '--px',
+              ((((e.clientX - r.left) / r.width) * 6 - 3) * cfg.intensity) / 100 + 'px',
+            );
+            e.currentTarget.style.setProperty(
+              '--py',
+              ((((e.clientY - r.top) / r.height) * 6 - 3) * cfg.intensity) / 100 + 'px',
+            );
+          }}
+          onPointerLeave={() => {
+            hero.current?.style.removeProperty('--px');
+            hero.current?.style.removeProperty('--py');
+          }}
+        >
+          <div className="forest-picture" />
+          <div className="forest-shade" />
+          <div className="forest-haze" />
+          {cfg.particles && (
+            <div className="spores" aria-hidden="true">
+              {Array.from({ length: 8 }, (_, i) => (
+                <i
+                  key={i}
+                  style={{
+                    left: 13 + i * 11 + '%',
+                    animationDelay: -i * 2.3 + 's',
+                    top: 26 + ((i * 13) % 58) + '%',
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          <div className="forest-title">
+            <div className="hero-edition">
+              <b />
+              MINECRAFT JAVA EDITION
+            </div>
+            <h2>
+              SPORYCH
+              <br />
+              <em>SURVIVAL</em>
+            </h2>
+            <p>
+              {w(
+                'Уютный Vanilla+ Survival в мире Sporium.',
+                'A cozy Vanilla+ survival world in Sporium.',
+              )}
+            </p>
+          </div>
+        </section>
+        <ServerPanel />
+      </div>
+      <LaunchBar />
       <section
-        className="forest-hero"
-        ref={hero}
-        style={{ '--effect': cfg.intensity / 100 } as CSSProperties}
-        onPointerMove={(e) => {
-          if (!cfg.parallax) return;
-          if (
-            data.settings.values.motion === 'reduced' ||
-            matchMedia('(prefers-reduced-motion: reduce)').matches
-          )
-            return;
-          const r = e.currentTarget.getBoundingClientRect();
-          e.currentTarget.style.setProperty(
-            '--px',
-            ((((e.clientX - r.left) / r.width) * 6 - 3) * cfg.intensity) / 100 + 'px',
-          );
-          e.currentTarget.style.setProperty(
-            '--py',
-            ((((e.clientY - r.top) / r.height) * 6 - 3) * cfg.intensity) / 100 + 'px',
-          );
-        }}
-        onPointerLeave={() => {
-          hero.current?.style.removeProperty('--px');
-          hero.current?.style.removeProperty('--py');
-        }}
+        className="home-instances"
+        aria-labelledby="home-instances-title"
+        aria-busy={loading}
       >
-        <div className="forest-picture" />
-        <div className="forest-shade" />
-        <div className="forest-haze" />
-        {cfg.particles && (
-          <div className="spores" aria-hidden="true">
-            {Array.from({ length: 8 }, (_, i) => (
-              <i
-                key={i}
-                style={{
-                  left: 13 + i * 11 + '%',
-                  animationDelay: -i * 2.3 + 's',
-                  top: 26 + ((i * 13) % 58) + '%',
-                }}
-              />
+        <header className="section-toolbar">
+          <h2 id="home-instances-title">{w('Установленные сборки', 'Installed instances')}</h2>
+          <Link className="text-link" to="/instances">
+            {w('Все сборки', 'All instances')} <PixelIcon name="arrow" />
+          </Link>
+        </header>
+        {instances.length ? (
+          <div className="instance-grid">
+            {instances.map((instance) => (
+              <InstanceCard instance={instance} key={instance.id} />
             ))}
           </div>
-        )}
-        <div className="forest-title">
-          <div className="hero-edition">
-            <b />
-            MINECRAFT JAVA EDITION
-          </div>
-          <h2>
-            Sporium
-            <br />
-            <em>World</em>
-          </h2>
-          <p>
-            {w(
-              'Уютный Vanilla+ Survival в мире Sporium.',
-              'A cozy Vanilla+ survival world in Sporium.',
-            )}
+        ) : (
+          <p className="home-instances-empty">
+            {loading
+              ? w('Загрузка…', 'Loading…')
+              : w('Установленных сборок пока нет.', 'No installed instances yet.')}
           </p>
-        </div>
-        <ServerPanel />
+        )}
       </section>
-      <LaunchBar />
       <div className="world-tiles">
         <article className="news-tile">
           <div className="tile-top">
             <div className="world-symbol">
-              <Newspaper size={18} />
+              <PixelIcon name="news" />
             </div>
             <Link to="/news" aria-label={w('Все новости', 'All news')}>
               <ArrowUpRight size={19} />
@@ -396,7 +426,7 @@ export function WorldHome() {
         <Link className="gallery-tile" to="/world">
           <div className="tile-top">
             <div className="world-symbol">
-              <Compass size={19} />
+              <PixelIcon name="world" />
             </div>
             <ArrowUpRight size={19} />
           </div>
@@ -485,8 +515,14 @@ export function ProfilePage() {
   return (
     <div className="page world-page">
       <div className="world-head">
-        <CircleUserRound />
+        <span className="world-symbol">
+          <PixelIcon name="profile" />
+        </span>
         <h1>{w('Профиль', 'Profile')}</h1>
+        <Link className="button secondary profile-settings-link" to="/settings/accounts">
+          <PixelIcon name="settings" />
+          {w('Настройки аккаунта', 'Account settings')}
+        </Link>
       </div>
       <section className="surface world-profiles">
         <ProfilesSettings />

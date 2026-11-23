@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useFoundation } from '../app/context';
 import { useLibrary } from '../library/context';
 import { LibraryCard } from '../components/LibraryCard';
@@ -17,7 +17,9 @@ export function LibraryPage() {
   const { kind } = useParams();
   const { t } = useFoundation();
   const { snapshot, loading, error } = useLibrary();
-  const [query, setQuery] = useState('');
+  const [params, setParams] = useSearchParams();
+  const query = params.get('q') ?? '';
+  const setQuery = (value: string) => setParams(value ? { q: value } : {}, { replace: true });
   const [favorites, setFavorites] = useState(false);
   const [sort, setSort] = useState('recent');
   const library = libraries.find((item) => item.id === kind);

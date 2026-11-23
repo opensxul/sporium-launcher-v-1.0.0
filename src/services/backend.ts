@@ -442,7 +442,7 @@ export function browserPreview(): Bootstrap {
     },
     info: {
       name: 'Sporium',
-      version: '2.0.0',
+      version: '2.1.0',
       platform: 'browser',
       databaseSchema: 4,
       dataDirectory: '',

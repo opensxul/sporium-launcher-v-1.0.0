@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef } from 'react';
 import type { ReactNode } from 'react';
-import { X } from 'lucide-react';
+import { PixelIcon } from './PixelIcon';
 import { useFoundation } from '../app/context';
 
 export function Modal({
@@ -38,6 +38,7 @@ export function Modal({
       ref={dialog}
       className={`modal editor-modal ${className}`}
       aria-labelledby={id}
+      aria-busy={busy || undefined}
       onCancel={(event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -53,7 +54,7 @@ export function Modal({
           onClick={onClose}
           aria-label={t('common.close')}
         >
-          <X size={19} />
+          <PixelIcon name="close" />
         </button>
       </header>
       <div className="modal-content">{children}</div>

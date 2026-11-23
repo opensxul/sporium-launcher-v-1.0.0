@@ -7,6 +7,7 @@ import { backend, normalizeError, type BackendError } from '../services/backend'
 import { ErrorNotice, Toggle } from '../components/ui';
 import { MicrosoftLogin } from '../world/MicrosoftLogin';
 import { Modal } from '../components/Modal';
+import { PixelIcon } from '../components/PixelIcon';
 
 const skins = new Map<string, Promise<SkinView>>();
 export function Skin({ nickname, full = false }: { nickname: string; full?: boolean }) {
@@ -141,6 +142,10 @@ export function ProfilesSettings() {
   const [nickname, setNickname] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<BackendError | null>(null);
+  const active = data.profiles.profiles.find(
+    (profile) => profile.id === data.profiles.activeProfileId,
+  );
+  const ru = data.settings.values.locale === 'ru-RU';
   async function edit(request: Omit<EditProfile, 'expectedRevision'>) {
     setBusy(true);
     setError(null);
@@ -159,28 +164,42 @@ export function ProfilesSettings() {
   return (
     <div className="profiles-settings">
       <p className="setting-hint">{t('game.localHint')}</p>
-      <p className="setting-hint">{t('profile.skinScope')}</p>
-      <Toggle
-        label={t('profile.inGameSkins')}
-        description={t('profile.inGameSkinsHint')}
-        checked={data.settings.values.nicknameSkins}
-        disabled={!desktop || busy}
-        onChange={(nicknameSkins) => {
-          setBusy(true);
-          setError(null);
-          void backend
-            .saveSettings({
-              values: { ...data.settings.values, nicknameSkins },
-              expectedRevision: data.settings.revision,
-            })
-            .then(() => reload())
-            .catch((reason) => {
-              setError(normalizeError(reason));
-              void reload();
-            })
-            .finally(() => setBusy(false));
-        }}
-      />
+      <section className="skin-section" aria-label={ru ? 'Скин' : 'Skin'}>
+        <div className="skin-stage">
+          <Skin
+            key={active?.id ?? data.settings.values.localNickname}
+            nickname={active?.nickname ?? data.settings.values.localNickname}
+            full
+          />
+        </div>
+        <div className="skin-options">
+          <h3>
+            <PixelIcon name="skins" /> {ru ? 'Скин' : 'Skin'}
+          </h3>
+          <p className="setting-hint">{t('profile.skinScope')}</p>
+          <Toggle
+            label={t('profile.inGameSkins')}
+            description={t('profile.inGameSkinsHint')}
+            checked={data.settings.values.nicknameSkins}
+            disabled={!desktop || busy}
+            onChange={(nicknameSkins) => {
+              setBusy(true);
+              setError(null);
+              void backend
+                .saveSettings({
+                  values: { ...data.settings.values, nicknameSkins },
+                  expectedRevision: data.settings.revision,
+                })
+                .then(() => reload())
+                .catch((reason) => {
+                  setError(normalizeError(reason));
+                  void reload();
+                })
+                .finally(() => setBusy(false));
+            }}
+          />
+        </div>
+      </section>
       <button
         className="button primary"
         disabled={!desktop || busy}

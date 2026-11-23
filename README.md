@@ -1,12 +1,12 @@
-# Sporium Launcher 2.0
+# Sporych Launcher
 
 <img src="public/branding/mark-256.png" width="128" alt="Sporium" />
 
-Десктопный лаунчер Sporium для Minecraft Java на Windows x64. На главной доступны игровой профиль, запуск Vanilla, статус сервера, новости и галерея. Коллекции сборок и каталог Modrinth открываются в боковом меню.
+Десктопный лаунчер для Minecraft Java на Windows x64. На главной доступны запуск Vanilla, установленные сборки, статус сервера Sporium, новости и галерея. Профиль, коллекции сборок и каталог Modrinth открываются в боковой панели. [Функции и изменения 2.1](docs/releases/2.1.0.md).
 
 ## Установка
 
-Запустите установщик SporiumLauncher.exe из комплекта 2.0. Для запуска без установки откройте Sporium.exe. Windows требуется WebView2. Версии, опубликованные владельцем проекта, доступны в [GitHub Releases](https://github.com/opensxul/sporium-launcher-v-1.0.0/releases).
+Запустите SporiumLauncher.exe из [GitHub Releases](https://github.com/opensxul/sporium-launcher-v-1.0.0/releases). Установленная версия проверяет обновления при запуске. Windows требуется WebView2.
 
 Сборки и настройки хранятся отдельно, в `%LOCALAPPDATA%\app.sporium.launcher`. Повторная установка сохраняет эти данные. При удалении программы не включайте пункт удаления данных приложения, если хотите сохранить библиотеку.
 

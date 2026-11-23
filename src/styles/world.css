@@ -10,22 +10,6 @@
   margin: 16px 0;
   color: var(--primary);
 }
-:root {
-  --background: #141a16;
-  --surface: #202920;
-  --elevated-surface: #29342b;
-  --sidebar: #161d18;
-  --border: #364338;
-  --border-subtle: #2b362d;
-  --primary: #a4d58c;
-  --primary-hover: #b7e59d;
-  --primary-text: #172613;
-  --text-primary: #f2ebd9;
-  --text-secondary: #b7bfb0;
-  --text-muted: #98a393;
-  --focus: #f2cc83;
-  --radius: 12px;
-}
 body {
   background: var(--background);
 }

@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { ArrowUpRight, Compass, Folder, Search, ShieldCheck, Play } from 'lucide-react';
 import { ImportPackButton } from '../packs/PackImports';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useFoundation } from '../app/context';
 import { EmptyState, PageHeading, SearchBar } from '../components/ui';
 import { LibraryCard } from '../components/LibraryCard';
@@ -21,7 +20,9 @@ export function LibraryHome() {
   const game = useGame();
   const content = useContent();
   const { snapshot } = useLibrary();
-  const [query, setQuery] = useState('');
+  const [params, setParams] = useSearchParams();
+  const query = params.get('q') ?? '';
+  const setQuery = (value: string) => setParams(value ? { q: value } : {}, { replace: true });
   const recent = snapshot.instances
     .filter((item) => item.lastPlayedAt !== null)
     .sort((a, b) => (b.lastPlayedAt ?? 0) - (a.lastPlayedAt ?? 0))

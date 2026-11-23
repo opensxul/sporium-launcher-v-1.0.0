@@ -6,26 +6,6 @@
   overflow: auto;
   margin: 18px 0;
 }
-:root {
-  --background: #081411;
-  --surface: #10231d;
-  --elevated-surface: #17372c;
-  --sidebar: #0a1b16;
-  --border: #2a4b3d;
-  --border-subtle: #1c392e;
-  --primary: #7eddb0;
-  --primary-hover: #a2efc8;
-  --primary-text: #07291b;
-  --accent: #ee967e;
-  --text-primary: #fbf3df;
-  --text-secondary: #b4c9bd;
-  --text-muted: #91ad9c;
-  --success: #8fe0b0;
-  --warning: #f0cd8f;
-  --focus: #e7d69b;
-  --brand-cream: #f0d59e;
-  --brand-coral: #ee967e;
-}
 .brand {
   gap: 10px;
   padding-inline: 4px;

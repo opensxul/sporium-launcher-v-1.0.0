@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { Foundation } from './app/Foundation';
 import { router } from './app/router';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/pixelify-sans';
 import './styles/tokens.css';
 import './styles/app.css';
 import './styles/instances.css';
@@ -12,6 +14,7 @@ import './styles/projects.css';
 import './styles/polish.css';
 import './styles/branding.css';
 import './styles/world.css';
+import './styles/design.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -9,7 +9,7 @@ test('home opens real library routes, search is local, unsupported actions are e
   await expect(page.getByRole('heading', { name: 'Мои сборки', exact: true })).toBeVisible();
   await expect(page.getByRole('note')).toContainText('Веб-предпросмотр');
   await expect(page.locator('.library-card')).toHaveCount(6);
-  await page.getByRole('searchbox').fill('fabric');
+  await page.locator('main').getByRole('searchbox').fill('fabric');
   await expect(page.locator('.library-card')).toHaveCount(1);
   await page.getByRole('link', { name: 'Fabric — Открыть библиотеку' }).click();
   await expect(page).toHaveURL(/#\/instances\/fabric$/);

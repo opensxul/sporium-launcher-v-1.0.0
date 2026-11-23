@@ -1,15 +1,23 @@
-import { ArrowUpRight } from 'lucide-react';
+import { PixelIcon } from './PixelIcon';
 import { Link } from 'react-router-dom';
 import { useFoundation } from '../app/context';
 import type { Library } from './libraries';
 import { useLibrary } from '../library/context';
 import { belongsToLibrary } from '../library/view-model';
 
+const categoryIcon = {
+  vanilla: 'instances',
+  studio: 'settings',
+  fabric: 'library',
+  forge: 'storage',
+  neoforge: 'light',
+  managed: 'catalog',
+} as const;
+
 export function LibraryCard({ library }: { library: Library }) {
   const { t } = useFoundation();
   const { snapshot } = useLibrary();
   const count = snapshot.instances.filter((item) => belongsToLibrary(item, library.id)).length;
-  const Icon = library.icon;
   return (
     <Link
       className={`library-card library-${library.id}`}
@@ -17,15 +25,13 @@ export function LibraryCard({ library }: { library: Library }) {
       aria-label={`${library.name} — ${t('home.openLibrary')}`}
     >
       <div className="library-art" aria-hidden="true">
-        <span className="art-orbit orbit-one" />
-        <span className="art-orbit orbit-two" />
-        <span className="art-dot dot-one" />
-        <span className="art-dot dot-two" />
         <div className="library-symbol">
-          <Icon size={48} strokeWidth={1.15} />
+          <PixelIcon name={categoryIcon[library.id]} />
         </div>
         <span className="card-tag">{t(`library.${library.id}.tag`)}</span>
-        <ArrowUpRight className="card-arrow" size={19} />
+        <span className="card-arrow">
+          <PixelIcon name="arrow" />
+        </span>
       </div>
       <div className="library-info">
         <h3>{library.name}</h3>

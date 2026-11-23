@@ -1,18 +1,6 @@
-import {
-  BookOpen,
-  ChevronRight,
-  Compass,
-  Download,
-  Folder,
-  Home,
-  Newspaper,
-  Trees,
-  UserRound,
-  Layers,
-  Settings,
-} from 'lucide-react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { BrandMark } from '../components/BrandMark';
+import { PixelIcon } from '../components/PixelIcon';
 import { WorldProvider } from '../world/WorldProvider';
 import { AppUpdates } from './AppUpdates';
 import { BackupNotice } from '../library/LibraryStatus';
@@ -26,16 +14,15 @@ import { PackImports } from '../packs/PackImports';
 import '../styles/packs.css';
 
 const navigation = [
-  { to: '/', key: 'nav.home', icon: Home },
-  { to: '/news', key: 'nav.news', icon: Newspaper },
-  { to: '/world', key: 'nav.world', icon: Trees },
-  { to: '/profile', key: 'nav.profile', icon: UserRound },
-  { to: '/library', key: 'nav.library', icon: Layers },
-  { to: '/catalog', key: 'nav.catalog', icon: Compass },
-  { to: '/instances', key: 'nav.instances', icon: BookOpen },
-  { to: '/folders', key: 'nav.folders', icon: Folder },
-  { to: '/downloads', key: 'nav.downloads', icon: Download },
-  { to: '/settings', key: 'nav.settings', icon: Settings },
+  { to: '/', key: 'nav.home', icon: 'home' },
+  { to: '/news', key: 'nav.news', icon: 'news' },
+  { to: '/world', key: 'nav.world', icon: 'world' },
+  { to: '/library', key: 'nav.library', icon: 'library' },
+  { to: '/catalog', key: 'nav.catalog', icon: 'catalog' },
+  { to: '/instances', key: 'nav.instances', icon: 'instances' },
+  { to: '/folders', key: 'nav.folders', icon: 'folders' },
+  { to: '/downloads', key: 'nav.downloads', icon: 'downloads' },
+  { to: '/settings', key: 'nav.settings', icon: 'settings' },
 ] as const;
 
 export function Shell() {
@@ -43,13 +30,23 @@ export function Shell() {
   const { state: gameState } = useGame();
   const { job: contentJob } = useContent();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const searchRoute =
+    ['/library', '/catalog'].includes(pathname) || pathname.startsWith('/instances')
+      ? pathname
+      : '/instances';
+  const searchValue = params.get('q') ?? '';
+  const searchLabel = searchRoute === '/catalog' ? t('content.search') : t('home.search');
   const nickname =
     data.profiles.profiles.find((p) => p.id === data.profiles.activeProfileId)?.nickname ??
     data.settings.values.localNickname;
   const current: MessageKey = pathname.startsWith('/instance/')
     ? 'nav.instances'
-    : (navigation.find((item) => item.to !== '/' && pathname.startsWith(item.to))?.key ??
-      'nav.home');
+    : pathname === '/profile'
+      ? 'nav.profile'
+      : (navigation.find((item) => item.to !== '/' && pathname.startsWith(item.to))?.key ??
+        'nav.home');
   return (
     <div className="app-shell">
       <AppUpdates />
@@ -64,15 +61,15 @@ export function Shell() {
         {t('app.skip')}
       </a>
       <aside className="sidebar">
-        <NavLink to="/" className="brand" aria-label="Sporium">
+        <NavLink to="/" className="brand" aria-label="Sporych Launcher">
           <BrandMark />
           <span className="brand-word">
-            sporium<span className="brand-sub">{t('app.brandCaption')}</span>
+            SPORYCH<span className="brand-sub">{t('app.brandCaption')}</span>
           </span>
         </NavLink>
 
         <nav aria-label={t('app.nav')}>
-          {navigation.map(({ to, key, icon: Icon }) => (
+          {navigation.map(({ to, key, icon }) => (
             <NavLink
               key={to}
               end={to === '/'}
@@ -82,32 +79,71 @@ export function Shell() {
               }
               title={t(key)}
             >
-              <Icon size={19} strokeWidth={1.7} />
+              <PixelIcon name={icon} />
               <span>{t(key)}</span>
             </NavLink>
           ))}
         </nav>
         <div className="sidebar-bottom">
           <div className="build-label">
-            <span className="status-dot" />
-            <span>Sporium {data.info.version}</span>
+            <span>v{data.info.version}</span>
           </div>
+          <NavLink
+            to="/profile"
+            className="account-widget"
+            title={t('nav.profile')}
+            aria-label={t('nav.profile')}
+          >
+            <span className="avatar">
+              <Skin key={nickname} nickname={nickname} />
+            </span>
+            <span className="profile-label">
+              <b>{nickname}</b>
+              <small>{t('nav.profile')}</small>
+            </span>
+            <PixelIcon name="arrow" />
+          </NavLink>
         </div>
       </aside>
       <div className="main-shell">
         <header className="topbar">
           <div className="breadcrumb">
-            <span>Sporium</span>
-            <ChevronRight size={13} />
+            <span>Sporych</span>
+            <PixelIcon name="arrow" />
             <span>{t(current)}</span>
           </div>
-          <NavLink to="/profile" className="account-widget" title={t('nav.profile')}>
-            <span className="avatar">
-              <Skin key={nickname} nickname={nickname} />
-            </span>
-            <span>{nickname}</span>
-            <ChevronRight size={14} />
-          </NavLink>
+          <form
+            key={pathname + searchValue}
+            role="search"
+            className="global-search search-bar"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const value = String(new FormData(event.currentTarget).get('q') ?? '').trim();
+              const next =
+                searchRoute === pathname ? new URLSearchParams(params) : new URLSearchParams();
+              if (value) next.set('q', value);
+              else next.delete('q');
+              next.delete('offset');
+              void navigate({ pathname: searchRoute, search: next.toString() });
+            }}
+          >
+            <input
+              defaultValue={searchValue}
+              type="search"
+              name="q"
+              placeholder={searchLabel}
+              aria-label={searchLabel}
+              maxLength={120}
+            />
+            <button
+              className="icon-button"
+              type="submit"
+              title={searchLabel}
+              aria-label={searchLabel}
+            >
+              <PixelIcon name="search" />
+            </button>
+          </form>
         </header>
         {!desktop && (
           <div className="preview-notice" role="note">
@@ -125,7 +161,7 @@ export function Shell() {
         {(pathname !== '/' || contentActive(contentJob) || jobActive(gameState)) && (
           <footer className="download-dock">
             <div className="dock-icon">
-              <Download size={17} />
+              <PixelIcon name="downloads" />
             </div>
             <div>
               <span>
@@ -148,7 +184,7 @@ export function Shell() {
               </small>
             </div>
             <NavLink to="/downloads" className="icon-button" aria-label={t('nav.downloads')}>
-              <ChevronRight size={19} />
+              <PixelIcon name="arrow" />
             </NavLink>
           </footer>
         )}

@@ -1,6 +1,6 @@
 import type { ComponentType, ReactNode } from 'react';
 import type { LucideProps } from 'lucide-react';
-import { AlertCircle, Search, X } from 'lucide-react';
+import { PixelIcon } from './PixelIcon';
 import { useFoundation } from '../app/context';
 import type { BackendError } from '../services/backend';
 
@@ -63,7 +63,7 @@ export function SearchBar({
 }) {
   return (
     <div className="search-bar">
-      <Search size={18} aria-hidden="true" />
+      <PixelIcon name="search" />
       <input
         type="search"
         value={value}
@@ -78,7 +78,7 @@ export function SearchBar({
           onClick={() => onChange('')}
           aria-label={clearLabel}
         >
-          <X size={16} />
+          <PixelIcon name="close" />
         </button>
       )}
     </div>
@@ -89,7 +89,7 @@ export function ErrorNotice({ error, action }: { error: BackendError; action?: R
   const { t } = useFoundation();
   return (
     <div className="error-notice" role="alert">
-      <AlertCircle size={20} />
+      <PixelIcon name="warning" />
       <div>
         <p>{t(`error.${error.code}`)}</p>
         {action}
