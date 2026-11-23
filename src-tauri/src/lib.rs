@@ -2,12 +2,14 @@ pub mod app_updates;
 pub mod commands;
 pub mod content;
 mod content_commands;
+mod desktop;
 pub mod error;
 pub mod game;
 mod game_commands;
 mod instance_commands;
 pub mod instances;
 mod logging;
+mod microsoft;
 mod pack_commands;
 pub mod packs;
 mod profile_commands;
@@ -17,6 +19,7 @@ pub mod projects;
 pub mod settings;
 pub mod skins;
 pub mod storage;
+pub mod world;
 
 use commands::{AppInfo, AppState};
 use tauri::{Emitter, Manager};
@@ -25,9 +28,11 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(app_updates::Updates::default())
+        .manage(microsoft::Login::default())
         .setup(|app| {
-            let data_directory = app.path().app_local_data_dir()?;
-            // Debug-only isolation for native smoke tests; production always uses the OS directory.
+            desktop::install_tray(app)?;
+            let data_directory = desktop::library_root(app.path().app_local_data_dir()?)?;
+            // Existing debug smoke scripts can override the selected library.
             #[cfg(debug_assertions)]
             let data_directory = std::env::var_os("SPORIUM_TEST_DATA_DIR")
                 .map(std::path::PathBuf::from)
@@ -52,6 +57,7 @@ pub fn run() {
                 info: AppInfo::new(data_directory.to_string_lossy().into_owned()),
                 _log_guard: log_guard,
             });
+            desktop::create_window(app)?;
             Ok(())
         })
         .on_window_event(|window, event| {
@@ -136,6 +142,20 @@ pub fn run() {
             content_commands::pick_local_content,
             content_commands::finish_local_content,
             content_commands::open_content_project,
+            world::server_status,
+            world::world_feed,
+            world::world_image,
+            desktop::window_after_launch,
+            desktop::desktop_preferences,
+            desktop::set_startup,
+            desktop::select_library,
+            desktop::reset_library,
+            desktop::set_acceleration,
+            desktop::hide_to_tray,
+            microsoft::microsoft_available,
+            microsoft::microsoft_begin,
+            microsoft::microsoft_poll,
+            microsoft::microsoft_cancel,
             commands::bootstrap,
             commands::save_settings,
             profile_commands::edit_profile,

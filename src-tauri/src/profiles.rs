@@ -18,6 +18,7 @@ pub struct LocalProfile {
     pub id: String,
     pub nickname: String,
     pub offline_uuid: String,
+    pub microsoft: bool,
 }
 #[derive(Debug, Clone, Serialize, TS)]
 #[serde(rename_all = "camelCase")]
@@ -74,7 +75,7 @@ fn read(db: &Connection) -> Result<ProfileSnapshot, CoreError> {
         [],
         |r| Ok((r.get(0)?, r.get(1)?)),
     )?;
-    let mut query = db.prepare("SELECT id,nickname FROM local_profiles ORDER BY rowid")?;
+    let mut query = db.prepare("SELECT id,nickname,EXISTS(SELECT 1 FROM microsoft_accounts WHERE profile_id=local_profiles.id) FROM local_profiles ORDER BY rowid")?;
     let profiles = query
         .query_map([], |r| {
             let nickname: String = r.get(1)?;
@@ -82,6 +83,7 @@ fn read(db: &Connection) -> Result<ProfileSnapshot, CoreError> {
                 id: r.get(0)?,
                 offline_uuid: offline_uuid(&nickname).to_string(),
                 nickname,
+                microsoft: r.get(2)?,
             })
         })?
         .collect::<Result<Vec<_>, _>>()?;
@@ -132,6 +134,9 @@ pub fn edit(database: &Database, request: EditProfile) -> Result<ProfileSnapshot
                 let id = request.id.as_deref().ok_or(CoreError::InvalidInput)?;
                 if !state.profiles.iter().any(|p| p.id == id) {
                     return Err(CoreError::NotFound);
+                }
+                if state.profiles.iter().any(|p| p.id == id && p.microsoft) {
+                    return Err(CoreError::InvalidInput);
                 }
                 tx.execute(
                     "UPDATE local_profiles SET nickname=?2 WHERE id=?1",

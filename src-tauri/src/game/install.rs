@@ -27,6 +27,7 @@ pub fn prepare(
     instance: &Instance,
     directory: &Path,
     nickname: &str,
+    account: Option<&str>,
 ) -> Result<ResolvedLaunchPlan, CoreError> {
     let paths = Paths::new(manager.library.root())?;
     let _download_lock = paths.named_lock(&paths.root().join("shared/cache/downloads.lock"))?;
@@ -118,6 +119,9 @@ pub fn prepare(
         }
         tracing::warn!("Optional nickname skin module unavailable");
     }
+    let identity = account
+        .map(|id| crate::microsoft::refresh(&manager.database, id))
+        .transpose()?;
     let plan = launch::resolve(LaunchInputs {
         paths: &paths,
         metadata: &metadata,
@@ -129,6 +133,8 @@ pub fn prepare(
         asset_id: assets.id,
         logging,
         nickname,
+        default_memory_mb: settings.values.world.memory_mb,
+        identity: identity.as_ref(),
     })?;
     write_atomic(
         &paths,

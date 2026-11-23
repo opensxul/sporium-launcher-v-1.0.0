@@ -44,6 +44,7 @@ pub struct JavaRuntime {
 pub enum GameAction {
     Install,
     Local,
+    World,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, TS)]

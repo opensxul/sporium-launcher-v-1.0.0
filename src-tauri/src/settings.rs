@@ -41,6 +41,8 @@ pub struct Settings {
     pub download_concurrency: u8,
     #[serde(default)]
     pub cache_limit_mb: u32,
+    #[serde(default)]
+    pub world: crate::world::WorldSettings,
 }
 fn download_concurrency() -> u8 {
     6
@@ -63,12 +65,14 @@ impl Default for Settings {
             nickname_skins: true,
             download_concurrency: 6,
             cache_limit_mb: 0,
+            world: Default::default(),
         }
     }
 }
 
 impl Settings {
     pub fn validate(&self) -> Result<(), CoreError> {
+        self.world.validate()?;
         if !(1..=12).contains(&self.download_concurrency)
             || self.cache_limit_mb > 102400
             || (self.cache_limit_mb > 0 && self.cache_limit_mb < 64)
