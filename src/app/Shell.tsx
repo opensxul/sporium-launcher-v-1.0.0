@@ -1,5 +1,4 @@
 import { NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { BrandMark } from '../components/BrandMark';
 import { PixelIcon } from '../components/PixelIcon';
 import { WorldProvider } from '../world/WorldProvider';
 import { AppUpdates } from './AppUpdates';
@@ -62,7 +61,13 @@ export function Shell() {
       </a>
       <aside className="sidebar">
         <NavLink to="/" className="brand" aria-label="Sporych Launcher">
-          <BrandMark />
+          <img
+            className="sidebar-mark"
+            src="/branding/pixel/mushroom.png"
+            width={64}
+            height={64}
+            alt=""
+          />
           <span className="brand-word">
             SPORYCH<span className="brand-sub">{t('app.brandCaption')}</span>
           </span>
@@ -79,7 +84,7 @@ export function Shell() {
               }
               title={t(key)}
             >
-              <PixelIcon name={icon} />
+              <PixelIcon name={icon} colored />
               <span>{t(key)}</span>
             </NavLink>
           ))}

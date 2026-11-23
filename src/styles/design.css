@@ -62,7 +62,7 @@ body {
   padding: 6px 4px 18px;
 }
 .brand-word {
-  font: 700 1.9rem/0.94 var(--font-pixel);
+  font: 700 1.9rem/0.94 var(--font-ui);
   color: var(--cream);
   letter-spacing: 0.03em;
 }
@@ -143,7 +143,7 @@ h1,
 .world-head h1,
 .world-page > h1,
 .page-heading h1 {
-  font: 650 clamp(1.9rem, 2.6vw, 2.65rem)/1.05 var(--font-pixel);
+  font: 650 clamp(1.9rem, 2.6vw, 2.65rem)/1.05 var(--font-ui);
   letter-spacing: 0;
   overflow-wrap: anywhere;
 }
@@ -265,7 +265,7 @@ h1,
   border-radius: var(--radius);
 }
 :is(.empty-state, .world-empty, .settings-content-header, .section-toolbar, .modal-header) h2 {
-  font: 650 clamp(1.12rem, 1.55vw, 1.5rem)/1.15 var(--font-pixel);
+  font: 650 clamp(1.12rem, 1.55vw, 1.5rem)/1.15 var(--font-ui);
   letter-spacing: 0;
 }
 :is(.button, .play-button, .icon-button) {
@@ -408,11 +408,6 @@ progress[value]::-webkit-progress-value {
 .world-head {
   gap: 12px;
 }
-.world-feature {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(205px, 24%);
-  gap: 16px;
-}
 .forest-hero {
   align-items: flex-end;
   height: auto;
@@ -434,21 +429,6 @@ progress[value]::-webkit-progress-value {
     inset 0 3px var(--leaf-edge),
     inset 0 -2px var(--forest);
   pointer-events: none;
-}
-.forest-title h2 {
-  font: 700 clamp(2.55rem, 6.15vw, 7.25rem)/0.79 var(--font-pixel);
-  letter-spacing: 0.005em;
-  color: var(--text-primary);
-  text-shadow:
-    2px 3px var(--panel-shadow),
-    4px 5px var(--modal-shade);
-  margin: 14px 0;
-}
-.forest-title h2 em {
-  color: var(--leaf);
-  font: inherit;
-  font-size: 0.63em;
-  letter-spacing: 0.045em;
 }
 .hero-edition {
   color: var(--text-primary);
@@ -475,7 +455,7 @@ progress[value]::-webkit-progress-value {
   flex-direction: column;
 }
 .server-panel h2 {
-  font-family: var(--font-pixel);
+  font-family: var(--font-ui);
   font-size: 1.4rem;
   letter-spacing: 0;
 }
@@ -516,7 +496,7 @@ progress[value]::-webkit-progress-value {
   min-width: min(210px, 100%);
 }
 .play-button strong {
-  font: 700 1.42rem var(--font-pixel);
+  font: 700 1.42rem var(--font-ui);
   letter-spacing: 0.04em;
 }
 .home-instances {
@@ -536,9 +516,6 @@ progress[value]::-webkit-progress-value {
   color: var(--text-secondary);
   padding: 14px;
   border: 1px dashed var(--border);
-}
-.world-tiles {
-  gap: 16px;
 }
 .gallery-tile {
   background:
@@ -572,7 +549,7 @@ progress[value]::-webkit-progress-value {
   padding: 14px;
 }
 .skin-options h3 {
-  font-family: var(--font-pixel);
+  font-family: var(--font-ui);
   font-size: 1.35rem;
 }
 .skin-options .pixel-icon {
@@ -623,14 +600,6 @@ progress[value]::-webkit-progress-value {
   }
 }
 @media (max-width: 760px) {
-  .world-feature {
-    grid-template-columns: 1fr;
-  }
-  .world-feature .server-panel dl {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 14px;
-  }
   .server-panel .server-link {
     padding-top: 7px;
   }
@@ -658,9 +627,6 @@ progress[value]::-webkit-progress-value {
   }
   .global-search {
     width: 100%;
-  }
-  .forest-title h2 {
-    font-size: clamp(2rem, 10vw, 3.05rem);
   }
   .profile-settings-link {
     margin: 4px 0 0;

@@ -4,6 +4,15 @@ test('top search opens existing library filters and profile links to skin settin
   page,
 }) => {
   await page.goto('/#/');
+  await expect(page.locator('.forest-hero').getByRole('heading', { level: 1 })).toHaveCSS(
+    'font-family',
+    /Inter Variable/,
+  );
+  await expect(page.locator('.brand-word')).toHaveCSS('font-family', /Pixelify Sans Variable/);
+  await expect(page.locator('.forest-hero .play-button')).toBeVisible();
+  await expect(
+    page.locator('.home-rail-v2').getByRole('region', { name: 'Новости' }),
+  ).toBeVisible();
   const search = page.getByRole('search').getByRole('searchbox');
   await search.fill('Vanilla');
   await search.press('Enter');

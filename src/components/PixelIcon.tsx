@@ -21,12 +21,16 @@ type IconName =
   | 'light'
   | 'storage';
 
-export function PixelIcon({ name }: { name: IconName }) {
+export function PixelIcon({ name, colored = false }: { name: IconName; colored?: boolean }) {
   return (
     <span
-      className="pixel-icon"
+      className={colored ? 'pixel-icon pixel-icon-color' : 'pixel-icon'}
       aria-hidden="true"
-      style={{ '--pixel-image': `url("/branding/pixel/${name}.png")` } as CSSProperties}
+      style={
+        {
+          '--pixel-image': `url("/branding/pixel/${colored ? 'color-' : ''}${name}.png")`,
+        } as CSSProperties
+      }
     />
   );
 }

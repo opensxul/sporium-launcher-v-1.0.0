@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { invoke } from '@tauri-apps/api/core';
 import {
   ArrowRight,
-  ArrowUpRight,
   Box,
   ChevronRight,
   Image as ImageIcon,
@@ -19,11 +18,13 @@ import { useWorld, type Article, type Photo } from './context';
 import { useGame, jobActive } from '../game/context';
 import { useLibrary } from '../library/context';
 import { useContent } from '../content/context';
-import { ProfilesSettings, Skin } from '../game/Profiles';
+import { ProfilesSettings } from '../game/Profiles';
 import { backend, normalizeError, BackendError } from '../services/backend';
 import { ErrorNotice } from '../components/ui';
 import { Modal } from '../components/Modal';
 import { PixelIcon } from '../components/PixelIcon';
+import { ProjectIcon } from '../content/ProjectIcon';
+import type { ContentHit } from '../bindings/core';
 import { InstanceCard } from '../library/InstanceCard';
 import { GameActivity } from '../game/GameActivity';
 
@@ -127,7 +128,7 @@ function ServerPanel() {
       {statusState === 'unset' ? (
         <Link className="server-link" to="/settings/minecraft">
           {w('Указать адрес', 'Set address')}
-          <ArrowUpRight size={15} />
+          <PixelIcon name="arrow" />
         </Link>
       ) : (
         <button
@@ -143,7 +144,7 @@ function ServerPanel() {
   );
 }
 
-function LaunchBar() {
+function LaunchBanner() {
   const { data, desktop, t } = useFoundation();
   const { status } = useWorld();
   const library = useLibrary();
@@ -166,9 +167,6 @@ function LaunchBar() {
     eligible.find((i) => i.name === 'Sporium Survival') ||
     eligible.find((i) => i.favorite) ||
     eligible[0];
-  const nickname =
-    data.profiles.profiles.find((p) => p.id === data.profiles.activeProfileId)?.nickname ??
-    data.settings.values.localNickname;
   const job = game.state.job;
   const working = jobActive(game.state);
   const session = game.state.sessions.find((s) => s.instanceId === chosen?.id);
@@ -222,47 +220,35 @@ function LaunchBar() {
         : w('ИГРАТЬ', 'PLAY');
   return (
     <>
-      <div className="launch-bar">
-        <button
-          className="play-button"
-          disabled={
-            !desktop ||
-            working ||
-            running ||
-            game.starting ||
-            content.busy ||
-            pending ||
-            library.loading
-          }
-          onClick={() => void play()}
-        >
-          <PixelIcon name="play" />
-          <strong>{action}</strong>
-        </button>
-        <div className="launch-target">
-          <span>{w('Игровая сборка', 'Game instance')}</span>
-          <Link to={chosen ? '/instance/' + chosen.id : '/settings/minecraft'}>
-            {chosen?.name ?? 'Sporium Survival'} <ChevronRight size={13} />
-          </Link>
-          <small>
-            {chosen?.minecraftVersion || version || w('Выбрать версию', 'Select a version')}
-          </small>
-        </div>
-        <Link to="/profile" className="launch-profile">
-          <span className="avatar">
-            <Skin nickname={nickname} />
-          </span>
-          <span>
+      <ForestBanner>
+        <div className="launch-bar">
+          <button
+            className="play-button"
+            disabled={
+              !desktop ||
+              working ||
+              running ||
+              game.starting ||
+              content.busy ||
+              pending ||
+              library.loading
+            }
+            onClick={() => void play()}
+          >
+            <PixelIcon name="play" />
+            <strong>{action}</strong>
+          </button>
+          <div className="launch-target">
+            <span>{w('Игровая сборка', 'Game instance')}</span>
+            <Link to={chosen ? '/instance/' + chosen.id : '/settings/minecraft'}>
+              {chosen?.name ?? 'Sporium Survival'} <ChevronRight size={13} />
+            </Link>
             <small>
-              {data.profiles.profiles.find((p) => p.id === data.profiles.activeProfileId)?.microsoft
-                ? 'Microsoft'
-                : w('Локальный профиль', 'Local profile')}
+              {chosen?.minecraftVersion || version || w('Выбрать версию', 'Select a version')}
             </small>
-            <b>{nickname}</b>
-          </span>
-          <ChevronRight size={15} />
-        </Link>
-      </div>
+          </div>
+        </div>
+      </ForestBanner>
       {job && (working || job.phase === 'failed') && <GameActivity compact />}
       {!working && !pending && session && !session.running && !!session.exitCode && (
         <p className="game-exit" role="alert">
@@ -300,139 +286,284 @@ function FeedNotice({ gallery = false }: { gallery?: boolean }) {
     </p>
   );
 }
-export function WorldHome() {
+
+function ForestBanner({ children }: { children: ReactNode }) {
   const { data } = useFoundation();
-  const { feed } = useWorld();
-  const { snapshot, loading } = useLibrary();
   const w = useWords();
   const cfg = data.settings.values.world;
   const hero = useRef<HTMLElement>(null);
-  const lead = feed?.news[0];
+  return (
+    <section
+      className="forest-hero"
+      ref={hero}
+      style={{ '--effect': cfg.intensity / 100 } as CSSProperties}
+      onPointerMove={(e) => {
+        if (!cfg.parallax) return;
+        if (
+          data.settings.values.motion === 'reduced' ||
+          matchMedia('(prefers-reduced-motion: reduce)').matches
+        )
+          return;
+        const r = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty(
+          '--px',
+          ((((e.clientX - r.left) / r.width) * 6 - 3) * cfg.intensity) / 100 + 'px',
+        );
+        e.currentTarget.style.setProperty(
+          '--py',
+          ((((e.clientY - r.top) / r.height) * 6 - 3) * cfg.intensity) / 100 + 'px',
+        );
+      }}
+      onPointerLeave={() => {
+        hero.current?.style.removeProperty('--px');
+        hero.current?.style.removeProperty('--py');
+      }}
+    >
+      <div className="forest-picture" />
+      <div className="forest-shade" />
+      <div className="forest-haze" />
+      {cfg.particles && (
+        <div className="spores" aria-hidden="true">
+          {Array.from({ length: 8 }, (_, i) => (
+            <i
+              key={i}
+              style={{
+                left: 13 + i * 11 + '%',
+                animationDelay: -i * 2.3 + 's',
+                top: 26 + ((i * 13) % 58) + '%',
+              }}
+            />
+          ))}
+        </div>
+      )}
+      <img
+        className="forest-mark"
+        src="/branding/pixel/mushroom.png"
+        width={80}
+        height={80}
+        alt=""
+      />
+      <div className="forest-title">
+        <div className="hero-edition">
+          <b />
+          MINECRAFT JAVA EDITION
+        </div>
+        <h1>{w('Твои приключения начинаются здесь', 'Your adventure starts here')}</h1>
+        <p>
+          {w(
+            'Отправляйся в мир Sporium Survival или выбери свою сборку.',
+            'Explore Sporium Survival or choose your own instance.',
+          )}
+        </p>
+      </div>
+      <div className="forest-action">{children}</div>
+    </section>
+  );
+}
+
+const popularCatalog = '/catalog?kind=modpack&sort=downloads';
+
+function PopularPacks() {
+  const { desktop, data } = useFoundation();
+  const w = useWords();
+  const [items, setItems] = useState<ContentHit[] | null>(null);
+  useEffect(() => {
+    if (!desktop) return;
+    let active = true;
+    void backend
+      .contentSearch({
+        query: '',
+        kind: 'modpack',
+        minecraft: '',
+        loader: '',
+        category: '',
+        environment: '',
+        sort: 'downloads',
+        offset: 0,
+        instanceId: null,
+      })
+      .then((page) => {
+        if (active) setItems(page.hits.slice(0, 3));
+      })
+      .catch(() => {
+        if (active) setItems([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, [desktop]);
+
+  const number = new Intl.NumberFormat(data.settings.values.locale, { notation: 'compact' });
+  return (
+    <section className="home-picks" aria-labelledby="home-picks-title">
+      <header className="home-row-heading">
+        <h2 id="home-picks-title">
+          <PixelIcon name="catalog" colored /> {w('Популярные сборки', 'Popular modpacks')}
+        </h2>
+        <Link className="text-link" to={popularCatalog}>
+          {w('Весь каталог', 'Browse catalog')} <PixelIcon name="arrow" />
+        </Link>
+      </header>
+      {items?.length ? (
+        <div className="popular-grid">
+          {items.map((item) => (
+            <article className="popular-card" key={item.id}>
+              <div className="popular-cover">
+                <ProjectIcon url={item.iconUrl} title="" kind={item.kind} />
+              </div>
+              <div className="popular-body">
+                <h3 title={item.title}>{item.title}</h3>
+                <small>
+                  {item.author} · {number.format(item.downloads)} {w('загрузок', 'downloads')}
+                </small>
+                <p>{item.description}</p>
+                <Link
+                  to={popularCatalog + '&q=' + encodeURIComponent(item.title)}
+                  className="text-link"
+                >
+                  {w('В каталоге', 'View in catalog')} <PixelIcon name="arrow" />
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div
+          className="home-panel pack-empty"
+          role={items === null && desktop ? 'status' : undefined}
+        >
+          <PixelIcon name="catalog" colored />
+          <p>
+            {items === null && desktop
+              ? w('Загружаем сборки…', 'Loading modpacks…')
+              : w(
+                  'Сборки Modrinth доступны в каталоге.',
+                  'Explore Modrinth modpacks in the catalog.',
+                )}
+          </p>
+          <Link className="button secondary" to={popularCatalog}>
+            {w('Открыть каталог', 'Open catalog')}
+          </Link>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function HomeNews() {
+  const { feed } = useWorld();
+  const w = useWords();
+  return (
+    <section className="home-panel home-news" aria-labelledby="home-news-title">
+      <header className="home-row-heading">
+        <h2 id="home-news-title">
+          <PixelIcon name="news" colored /> {w('Новости', 'News')}
+        </h2>
+        <Link className="text-link" to="/news">
+          {w('Все новости', 'All news')} <PixelIcon name="arrow" />
+        </Link>
+      </header>
+      {feed?.news.length ? (
+        <div className="home-news-list">
+          {feed.news.slice(0, 3).map((article, index) => (
+            <Link to="/news" key={index} className="home-news-item">
+              {article.image && <WorldImage src={article.image} title="" small />}
+              <span>
+                <b>{article.title}</b>
+                <time>{article.date}</time>
+              </span>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <FeedNotice />
+      )}
+    </section>
+  );
+}
+
+function QuickSettings() {
+  const { data } = useFoundation();
+  const w = useWords();
+  const values = data.settings.values;
+  const memory = values.world.memoryMb;
+  return (
+    <section className="home-panel home-settings" aria-labelledby="home-settings-title">
+      <header className="home-row-heading">
+        <h2 id="home-settings-title">
+          <PixelIcon name="settings" colored /> {w('Быстрые настройки', 'Quick settings')}
+        </h2>
+      </header>
+      <Link className="home-setting-link" to="/settings/java">
+        <PixelIcon name="java" colored />
+        <span>
+          Java{' '}
+          <small title={values.customJavaPath ?? undefined}>
+            {values.customJavaPath ? w('Свой путь', 'Custom path') : w('Автовыбор', 'Automatic')}
+          </small>
+        </span>
+        <PixelIcon name="arrow" />
+      </Link>
+      <Link className="home-setting-link" to="/settings/minecraft">
+        <PixelIcon name="storage" colored />
+        <span>
+          {w('Память', 'Memory')}{' '}
+          <small>
+            {memory ? memory.toLocaleString(values.locale) + ' MiB' : w('Автовыбор', 'Automatic')}
+          </small>
+        </span>
+        <PixelIcon name="arrow" />
+      </Link>
+    </section>
+  );
+}
+
+export function WorldHome() {
+  const { snapshot, loading } = useLibrary();
+  const w = useWords();
   const instances = snapshot.instances
     .filter((item) => item.status === 'installed')
     .sort((a, b) => (b.lastPlayedAt ?? 0) - (a.lastPlayedAt ?? 0))
     .slice(0, 3);
   return (
     <div className="world-home">
-      <div className="world-head">
-        <span className="world-symbol">
-          <PixelIcon name="home" />
-        </span>
-        <h1>{w('Главная', 'Home')}</h1>
-      </div>
-      <div className="world-feature">
-        <section
-          className="forest-hero"
-          ref={hero}
-          style={{ '--effect': cfg.intensity / 100 } as CSSProperties}
-          onPointerMove={(e) => {
-            if (!cfg.parallax) return;
-            if (
-              data.settings.values.motion === 'reduced' ||
-              matchMedia('(prefers-reduced-motion: reduce)').matches
-            )
-              return;
-            const r = e.currentTarget.getBoundingClientRect();
-            e.currentTarget.style.setProperty(
-              '--px',
-              ((((e.clientX - r.left) / r.width) * 6 - 3) * cfg.intensity) / 100 + 'px',
-            );
-            e.currentTarget.style.setProperty(
-              '--py',
-              ((((e.clientY - r.top) / r.height) * 6 - 3) * cfg.intensity) / 100 + 'px',
-            );
-          }}
-          onPointerLeave={() => {
-            hero.current?.style.removeProperty('--px');
-            hero.current?.style.removeProperty('--py');
-          }}
-        >
-          <div className="forest-picture" />
-          <div className="forest-shade" />
-          <div className="forest-haze" />
-          {cfg.particles && (
-            <div className="spores" aria-hidden="true">
-              {Array.from({ length: 8 }, (_, i) => (
-                <i
-                  key={i}
-                  style={{
-                    left: 13 + i * 11 + '%',
-                    animationDelay: -i * 2.3 + 's',
-                    top: 26 + ((i * 13) % 58) + '%',
-                  }}
-                />
-              ))}
-            </div>
-          )}
-          <div className="forest-title">
-            <div className="hero-edition">
-              <b />
-              MINECRAFT JAVA EDITION
-            </div>
-            <h2>
-              SPORYCH
-              <br />
-              <em>SURVIVAL</em>
-            </h2>
-            <p>
-              {w(
-                'Уютный Vanilla+ Survival в мире Sporium.',
-                'A cozy Vanilla+ survival world in Sporium.',
-              )}
-            </p>
-          </div>
-        </section>
-        <ServerPanel />
-      </div>
-      <LaunchBar />
-      <section
-        className="home-instances"
-        aria-labelledby="home-instances-title"
-        aria-busy={loading}
-      >
-        <header className="section-toolbar">
-          <h2 id="home-instances-title">{w('Установленные сборки', 'Installed instances')}</h2>
-          <Link className="text-link" to="/instances">
-            {w('Все сборки', 'All instances')} <PixelIcon name="arrow" />
-          </Link>
-        </header>
-        {instances.length ? (
-          <div className="instance-grid">
-            {instances.map((instance) => (
-              <InstanceCard instance={instance} key={instance.id} />
-            ))}
-          </div>
-        ) : (
-          <p className="home-instances-empty">
-            {loading
-              ? w('Загрузка…', 'Loading…')
-              : w('Установленных сборок пока нет.', 'No installed instances yet.')}
-          </p>
-        )}
-      </section>
-      <div className="world-tiles">
-        <article className="news-tile">
-          <div className="tile-top">
-            <div className="world-symbol">
-              <PixelIcon name="news" />
-            </div>
-            <Link to="/news" aria-label={w('Все новости', 'All news')}>
-              <ArrowUpRight size={19} />
-            </Link>
-          </div>
-          <h2>{lead?.title ?? w('Новости сервера', 'Server news')}</h2>
-          {lead ? <p>{lead.summary}</p> : <FeedNotice />}
-        </article>
-        <Link className="gallery-tile" to="/world">
-          <div className="tile-top">
-            <div className="world-symbol">
-              <PixelIcon name="world" />
-            </div>
-            <ArrowUpRight size={19} />
-          </div>
-          <h2>{w('Мир Sporium', 'Sporium World')}</h2>
-          <p>{w('Галерея игрового мира', 'World photo gallery')}</p>
-        </Link>
+      <LaunchBanner />
+      <div className="home-columns">
+        <div className="home-main">
+          <PopularPacks />
+          <section
+            className="home-panel home-instances"
+            aria-labelledby="home-instances-title"
+            aria-busy={loading}
+          >
+            <header className="home-row-heading">
+              <h2 id="home-instances-title">
+                <PixelIcon name="instances" colored /> {w('Мои сборки', 'My instances')}
+              </h2>
+              <Link className="text-link" to="/instances">
+                {w('Все сборки', 'All instances')} <PixelIcon name="arrow" />
+              </Link>
+            </header>
+            {instances.length ? (
+              <div className="home-instance-list">
+                {instances.map((instance) => (
+                  <InstanceCard instance={instance} key={instance.id} />
+                ))}
+              </div>
+            ) : (
+              <p className="home-instances-empty">
+                {loading
+                  ? w('Загрузка…', 'Loading…')
+                  : w('Установленных сборок пока нет.', 'No installed instances yet.')}
+              </p>
+            )}
+          </section>
+        </div>
+        <div className="home-rail-v2">
+          <HomeNews />
+          <QuickSettings />
+          <ServerPanel />
+        </div>
       </div>
     </div>
   );

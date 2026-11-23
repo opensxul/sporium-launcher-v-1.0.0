@@ -4,10 +4,10 @@
   --font-pixel: 'Pixelify Sans Variable', 'Segoe UI', system-ui, sans-serif;
   --font-code: 'Cascadia Mono', Consolas, monospace;
   font-family: var(--font-ui);
-  --background: #171a17;
-  --sidebar: #222722;
-  --surface: #303830;
-  --elevated-surface: #3a4438;
+  --background: #181918;
+  --sidebar: #222322;
+  --surface: #2d302d;
+  --elevated-surface: #393d37;
   --moss: #527b3d;
   --forest: #34542e;
   --alert-red: #b84338;
@@ -15,8 +15,8 @@
   --gold: #d6ad55;
   --leaf: #b4d18a;
   --leaf-edge: #759957;
-  --border: #515b48;
-  --border-subtle: #3b4439;
+  --border: #454842;
+  --border-subtle: #343734;
   --primary: var(--leaf);
   --primary-hover: #5a8344;
   --primary-text: #fff9e9;
@@ -34,7 +34,7 @@
   --panel-light: #ffffff1c;
   --panel-shadow: #0008;
   --modal-shade: #101610c9;
-  --body-highlight: #29352a55;
+  --body-highlight: #292c2666;
   --shadow: 0 12px 28px #0003;
   --radius: 5px;
   --gutter: clamp(14px, 2.1vw, 32px);
